@@ -108,7 +108,7 @@ renderer.setPixelRatio(1);renderer.setSize(W,H,false);
 renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.05;
 const scene=new THREE.Scene();
 const pmrem=new THREE.PMREMGenerator(renderer);
-scene.environment=pmrem.fromScene(new RoomEnvironment(),0.04).texture;
+scene.environment=pmrem.fromScene(new RoomEnvironment(),0.04).texture;scene.environmentIntensity=.7;
 { // fond dégradé
   const c=document.createElement('canvas');c.width=256;c.height=512;const g=c.getContext('2d');
   const gr=g.createRadialGradient(128,200,10,128,220,420);gr.addColorStop(0,'#16285a');gr.addColorStop(.5,'#0a1430');gr.addColorStop(1,'#03060f');
@@ -131,7 +131,7 @@ const gumGeo=new RoundedBoxGeometry(1,1,1,6,.2);
 {const p=gumGeo.attributes.position,n=gumGeo.attributes.normal;
  for(let i=0;i<p.count;i++){const x=p.getX(i),y=p.getY(i),z=p.getZ(i);const d=(Math.sin(x*23+y*7)*Math.sin(y*19+z*11)*Math.sin(z*17+x*5))*.018;
   p.setXYZ(i,x+n.getX(i)*d,y+n.getY(i)*d,z+n.getZ(i)*d)} gumGeo.computeVertexNormals();}
-const gumMat=new THREE.MeshPhysicalMaterial({color:0x780914,roughness:.36,metalness:0,clearcoat:.7,clearcoatRoughness:.25,sheen:1,sheenColor:new THREE.Color(0xc03048),sheenRoughness:.6,emissive:0x3a0008,emissiveIntensity:.4});
+const gumMat=new THREE.MeshPhysicalMaterial({color:0x780914,roughness:.36,metalness:0,clearcoat:.4,clearcoatRoughness:.35,sheen:1,sheenColor:new THREE.Color(0xc03048),sheenRoughness:.6,emissive:0x3a0008,emissiveIntensity:.4});
 const sugarGeo=new THREE.BoxGeometry(.02,.02,.02);
 const sugarMat=new THREE.MeshStandardMaterial({color:0xc98f98,roughness:.55,metalness:0});
 function makeGummy(n=520){
@@ -195,7 +195,7 @@ const conv=new THREE.Points(convGeo,new THREE.PointsMaterial({color:0xaad6ff,siz
 // ---------- S4 : gummy central + 10 actifs ----------
 const core=makeGummy(380);scene.add(core);
 const ACT=[['L-Cys',0xff3b4f],['Zn',0xb8d4ff],['B8',0xffc94a],['Se',0xb48cff],['Cu',0xe0874a],['B6',0x5fe0ff],['C',0xffa040],['B9',0x7cff9a],['B12',0xff7ad0],['Bambou',0x9be37a]];
-const orbs=ACT.map(([n,c],i)=>{const m=new THREE.Mesh(new THREE.SphereGeometry(.2,32,32),new THREE.MeshPhysicalMaterial({color:c,emissive:c,emissiveIntensity:.35,metalness:.6,roughness:.18,clearcoat:1}));
+const orbs=ACT.map(([n,c],i)=>{const m=new THREE.Mesh(new THREE.SphereGeometry(.2,32,32),new THREE.MeshPhysicalMaterial({color:c,emissive:c,emissiveIntensity:.35,metalness:.5,roughness:.3,clearcoat:.6}));
   scene.add(m);const tag=document.createElement('div');tag.className='tag';tag.textContent=n;$('tags').appendChild(tag);return{m,tag,n,ph:i/ACT.length*Math.PI*2,rad:2.1+(i%2)*.45}});
 const BEATS=[{on:['L-Cys'],v:'250',u:'MG',h:'L-CYSTINE',p:'Acide aminé clé de la kératine',g:1},
  {on:['Zn','B8','Se'],v:'100%',u:'VNR BIOTINE',h:'ZINC · BIOTINE · SÉLÉNIUM',p:'Contribuent au maintien de cheveux normaux',g:1},
@@ -276,9 +276,9 @@ window.render=function(t){
     camera.position.set(Math.sin(l*.15)*.6,.3,7.6);camera.lookAt(0,.3,0);
     let lead=null;
     orbs.forEach((o,i)=>{const a=o.ph+l*.38;const hi=B.on.includes(o.n);
-      o.m.position.set(Math.cos(a)*o.rad,.35+Math.sin(a)*o.rad*.32+Math.sin(a*2+i)*.12,Math.sin(a)*o.rad*.9);
+      o.m.position.set(Math.cos(a)*o.rad,.35+Math.sin(a)*o.rad*.32+Math.sin(a*2+i)*.12,Math.sin(a)*o.rad*.45);
       const pop=hi?back(seg(bl,.05,.45)):0;o.m.scale.setScalar((.85+pop*.85)*out(seg(l,.2+i*.05,.7+i*.05)));
-      o.m.material.emissiveIntensity=hi?1.6:.35;
+      o.m.material.emissiveIntensity=hi?.75:.3;
       const [x,y,z]=proj(o.m);o.tag.style.left=x+'px';o.tag.style.top=(y-62*(hi?1.4:1))+'px';
       o.tag.style.opacity=(hi?1:.55)*seg(l,.5,1);o.tag.style.borderColor=hi?'#fff':'';o.tag.style.fontSize=hi?'30px':'22px';
       if(hi&&!lead)lead=[x,y]});
