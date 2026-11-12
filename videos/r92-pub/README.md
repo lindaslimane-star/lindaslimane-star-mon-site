@@ -22,3 +22,7 @@ Les rushs (`rush/avant.mov`, `rush/apres.mov`, `rush/gummies.mp4`) ne sont pas v
 Rendu Three.js (gummies 3D, fibre de kératine, actifs en orbite, HUD) + rush « gummies » entre 24,5 s et 27 s.
 1. `base3d.mp4` = noir + `rush/gummies.mp4` (3,2 s → fin) placé à 24,5 s.
 2. `node comp3d.js futur.html base3d.mp4 ../R92_futuriste_3D_v3.mp4` (sert le dossier en HTTP local, WebGL logiciel).
+
+## Vidéo hologramme v4 (style « Comment ça fonctionne », ~31 s)
+Fond noir, hologrammes cyan dans une bande centrale, sous-titres courts façon voix off.
+`node comp3d.js holo.html black31.mp4 ../R92_hologramme_v4.mp4` (black31.mp4 = 31 s de noir 1080×1920).

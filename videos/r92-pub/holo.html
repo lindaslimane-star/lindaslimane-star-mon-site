@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8">
+<style>
+@font-face{font-family:Oswald;font-weight:700;src:url(node_modules/@fontsource/oswald/files/oswald-latin-700-normal.woff2)}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1080px;height:1920px;overflow:hidden;background:#000;color:#fff;font-family:Inter,sans-serif}
+#gl{position:absolute;inset:0;width:1080px;height:1920px;-webkit-mask-image:linear-gradient(to bottom,transparent 0,transparent 300px,#000 470px,#000 1150px,transparent 1290px);mask-image:linear-gradient(to bottom,transparent 0,transparent 300px,#000 470px,#000 1150px,transparent 1290px)}
+#cap{position:absolute;left:60px;right:60px;top:1330px;text-align:center;font-weight:700;font-size:54px;line-height:1.25;text-shadow:0 2px 14px rgba(0,0,0,.9)}
+#cap span{display:inline-block}
+.tag{position:absolute;font-family:"JetBrains Mono",monospace;font-size:28px;letter-spacing:4px;color:#bff4ff;white-space:nowrap;transform:translate(-50%,-50%);text-shadow:0 0 12px #3fe0ff;opacity:0}
+#bottle{position:absolute;left:-270px;width:1620px;opacity:0}
+#offer{position:absolute;left:0;right:0;top:1250px;text-align:center;opacity:0}
+.cta{display:inline-flex;align-items:center;justify-content:center;margin-top:34px;height:130px;padding:0 70px;border-radius:999px;background:#3fe0ff;color:#001a22;font-family:Oswald;font-weight:700;font-size:58px;letter-spacing:2px;box-shadow:0 0 60px rgba(63,224,255,.6)}
+#legal{position:absolute;left:90px;right:90px;top:1600px;text-align:center;font-size:21px;line-height:1.4;color:rgba(255,255,255,.5);opacity:0}
+#fade{position:absolute;inset:0;background:#000;opacity:0}
+</style>
+<script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/"}}</script>
+</head><body>
+<canvas id="gl" width="1080" height="1920"></canvas>
+<img id="bottle" src="assets/packshot.png">
+<div id="tags"></div>
+<div id="cap"></div>
+<div id="offer">
+  <div style="font-family:Oswald;font-weight:700;font-size:118px;line-height:1">65,99 € <span style="font-size:56px;color:rgba(255,255,255,.5);position:relative">119,97 €<span id="strike" style="position:absolute;left:-6px;top:48%;height:6px;background:#3fe0ff;width:0"></span></span></div>
+  <div class="cta" id="cta">r92hair.com&nbsp;<span style="font-family:Inter;font-weight:800">→</span></div>
+</div>
+<div id="legal">Le zinc et la biotine contribuent au maintien de cheveux normaux. Complément alimentaire à utiliser dans le cadre d'une alimentation variée et équilibrée et d'un mode de vie sain.</div>
+<div id="fade"></div>
+
+<script type="module">
+import * as THREE from 'three';
+import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+
+const W=1080,H=1920,CY=0x3fe0ff;
+const $=id=>document.getElementById(id);
+const cl=(x,a=0,b=1)=>Math.min(b,Math.max(a,x));
+const seg=(t,a,b)=>cl((t-a)/(b-a));
+const out=x=>1-Math.pow(1-x,3);
+const inout=x=>x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2;
+const lerp=(a,b,k)=>a+(b-a)*k;
+function rng(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const R=rng(7);
+const holo=(o=.8,c=CY)=>new THREE.MeshBasicMaterial({color:c,transparent:true,opacity:o,blending:THREE.AdditiveBlending,depthWrite:false});
+const holoL=(o=.6,c=CY)=>new THREE.LineBasicMaterial({color:c,transparent:true,opacity:o,blending:THREE.AdditiveBlending,depthWrite:false});
+const holoP=(s=.05,o=.9,c=CY)=>new THREE.PointsMaterial({color:c,size:s,transparent:true,opacity:o,blending:THREE.AdditiveBlending,depthWrite:false});
+
+const renderer=new THREE.WebGLRenderer({canvas:$('gl'),antialias:true,preserveDrawingBuffer:true});
+renderer.setPixelRatio(1);renderer.setSize(W,H,false);renderer.setClearColor(0x000000,1);
+const scene=new THREE.Scene();scene.fog=new THREE.FogExp2(0x000000,.06);
+const camera=new THREE.PerspectiveCamera(40,W/H,.05,200);camera.setViewOffset(W,H,0,130,W,H);
+const composer=new EffectComposer(renderer);composer.setPixelRatio(1);composer.setSize(W,H);
+composer.addPass(new RenderPass(scene,camera));
+const bloom=new UnrealBloomPass(new THREE.Vector2(W/2,H/2),.75,.5,.3);composer.addPass(bloom);
+composer.addPass(new OutputPass());
+
+// ===== monde 1 : cuir chevelu + follicule =====
+const W1=new THREE.Group();scene.add(W1);
+{ // grille de peau légèrement ondulée
+  const pts=[];const N=40,S=14;
+  const hgt=(x,z)=>Math.sin(x*.8)*.06+Math.cos(z*.7)*.06;
+  for(let i=0;i<=N;i++){const a=-S/2+S*i/N;for(let j=0;j<N;j++){const b0=-S/2+S*j/N,b1=-S/2+S*(j+1)/N;
+    pts.push(a,hgt(a,b0),b0,a,hgt(a,b1),b1, b0,hgt(b0,a),a,b1,hgt(b1,a),a)}}
+  const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(pts,3));
+  W1.add(new THREE.LineSegments(g,holoL(.28)));
+}
+// cheveux qui poussent
+const strands=[];
+const strandMat=holo(.5);
+for(let i=0;i<70;i++){
+  let x,z;do{x=(R()-.5)*9;z=(R()-.5)*9}while(Math.hypot(x,z)<.5);
+  if(i===0){x=0;z=0}
+  const h=2.2+R()*1.6,bx=(R()-.5)*.8,bz=(R()-.5)*.8;
+  const curve=new THREE.CatmullRomCurve3([new THREE.Vector3(x,-.05,z),new THREE.Vector3(x+bx*.2,h*.35,z+bz*.2),new THREE.Vector3(x+bx*.6,h*.7,z+bz*.6),new THREE.Vector3(x+bx,h,z+bz)]);
+  const geo=new THREE.TubeGeometry(curve,40,i===0?.045:.022,6,false);
+  const m=new THREE.Mesh(geo,strandMat);W1.add(m);strands.push({m,geo,d:R()*.8,total:geo.index.count});
+}
+// follicule (sous la grille, au centre)
+const foll=new THREE.Group();W1.add(foll);
+{ const prof=[];for(let i=0;i<=24;i++){const y=-i/24*2.4;const r=.16+.05*Math.sin(i/24*Math.PI)+(i>18?.28*Math.sin((i-18)/6*Math.PI/2):0);prof.push(new THREE.Vector2(r,y))}
+  const sheath=new THREE.LatheGeometry(prof,28);
+  foll.add(new THREE.LineSegments(new THREE.WireframeGeometry(sheath),holoL(.35)));
+  const bulb=new THREE.Mesh(new THREE.IcosahedronGeometry(.32,3),holo(.12));bulb.position.y=-2.25;foll.add(bulb);
+  const core=new THREE.Mesh(new THREE.SphereGeometry(.16,24,24),holo(.9,0x9ff3ff));core.position.y=-2.3;foll.add(core);foll.userData.core=core;
+  // tige sous la peau
+  const root=new THREE.Mesh(new THREE.CylinderGeometry(.045,.07,2.3,10,1,true),holo(.6));root.position.y=-1.15;foll.add(root);
+}
+// particules qui montent dans le follicule
+const fpN=260,fpPos=new Float32Array(fpN*3),fpSeed=[];for(let i=0;i<fpN;i++)fpSeed.push([R(),R()*Math.PI*2,R()]);
+const fpGeo=new THREE.BufferGeometry();fpGeo.setAttribute('position',new THREE.BufferAttribute(fpPos,3));
+const fpPts=new THREE.Points(fpGeo,holoP(.03,.7,0xbff8ff));W1.add(fpPts);
+
+// ===== monde 2 : fibre de kératine + actifs =====
+const W2=new THREE.Group();scene.add(W2);
+const L=8,k=2.4,r=.4;
+const hp=(i,s)=>{const th=s*k+i*2*Math.PI/3;return new THREE.Vector3(r*Math.cos(th),s,r*Math.sin(th))};
+const helices=[];
+for(let i=0;i<3;i++){const pts=[];for(let s=-L/2;s<=L/2;s+=.05)pts.push(hp(i,s));
+  const geo=new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts),400,.03,6,false);const m=new THREE.Mesh(geo,holo(.5));W2.add(m);helices.push({m,geo,total:geo.index.count})}
+const rungs=[];
+for(let s=-L/2+.15,j=0;s<L/2;s+=.22,j++){const a=hp(j%3,s),b=hp((j+1)%3,s);
+  const g=new THREE.BufferGeometry().setFromPoints([a,b]);const mt=holoL(0,0xffffff);const l=new THREE.Line(g,mt);W2.add(l);rungs.push({mt,s})}
+for(let s=-L/2;s<=L/2;s+=.4){const t=new THREE.Mesh(new THREE.TorusGeometry(.75,.004,4,64),holo(.15));t.rotation.x=Math.PI/2;t.position.y=s;W2.add(t)}
+// briques (particules qui s'assemblent)
+const kN=700,kPos=new Float32Array(kN*3),kFrom=[],kTo=[],kD=[];
+for(let i=0;i<kN;i++){const s=-L/2+R()*L;kTo.push(hp(Math.floor(R()*3),s));kFrom.push(new THREE.Vector3((R()-.5)*9,(R()-.5)*12,(R()-.5)*7));kD.push(R())}
+const kGeo=new THREE.BufferGeometry();kGeo.setAttribute('position',new THREE.BufferAttribute(kPos,3));
+const kPts=new THREE.Points(kGeo,holoP(.04,.75,0xbff8ff));W2.add(kPts);
+// actifs
+const ACT=[['CYSTINE',new THREE.Vector3(-1.05,.85,.6)],['ZINC',new THREE.Vector3(1.1,.05,.5)],['BIOTINE',new THREE.Vector3(-.95,-.95,.8)]];
+const orbs=ACT.map(([n,p])=>{const g=new THREE.Group();
+  g.add(new THREE.LineSegments(new THREE.WireframeGeometry(new THREE.IcosahedronGeometry(.28,1)),holoL(.9)));
+  g.add(new THREE.Mesh(new THREE.SphereGeometry(.12,16,16),holo(1,0xdffaff)));
+  const ring=new THREE.Mesh(new THREE.TorusGeometry(.42,.006,4,64),holo(.6));g.add(ring);g.userData.ring=ring;
+  scene.add(g);const tag=document.createElement('div');tag.className='tag';tag.textContent=n;$('tags').appendChild(tag);return{g,tag,home:p}});
+// gummy hologramme
+const gum=new THREE.Group();scene.add(gum);
+{const geo=new RoundedBoxGeometry(1.6,1.6,1.6,4,.3);
+ gum.add(new THREE.LineSegments(new THREE.EdgesGeometry(geo,20),holoL(.9)));
+ gum.add(new THREE.Mesh(geo,holo(.07)));
+ const sp=[];for(let i=0;i<900;i++){const f=Math.floor(R()*6),u=(R()-.5)*1.35,v=(R()-.5)*1.35,o=.81;sp.push(...[[o,u,v],[-o,u,v],[u,o,v],[u,-o,v],[u,v,o],[u,v,-o]][f])}
+ const pg=new THREE.BufferGeometry();pg.setAttribute('position',new THREE.Float32BufferAttribute(sp,3));gum.add(new THREE.Points(pg,holoP(.03,.9,0xdffaff)));
+ const scan=new THREE.Mesh(new THREE.PlaneGeometry(1.9,1.9),holo(.06));scan.rotation.x=-Math.PI/2;gum.add(scan);gum.userData.scan=scan;}
+// poussière
+const dN=900,dPos=new Float32Array(dN*3),dB=[];for(let i=0;i<dN;i++){const p=[(R()-.5)*20,(R()-.5)*24,(R()-.5)*20];dB.push(p);dPos.set(p,i*3)}
+const dGeo=new THREE.BufferGeometry();dGeo.setAttribute('position',new THREE.BufferAttribute(dPos,3));
+const dust=new THREE.Points(dGeo,holoP(.03,.55));scene.add(dust);
+
+// ===== script =====
+const CAPS=[[0,2.7,"Ton cheveu pousse d'environ 1 cm par mois."],[2.7,4.4,"Voici comment."],
+ [4.4,7.4,"Sous ta peau, une mini-usine : le follicule."],[7.4,10.4,"Il fabrique de la kératine, brique par brique."],
+ [10.4,13,"Mais pour ça, il lui faut des matières premières."],[13,17.5,"La cystine. Le zinc. La biotine."],
+ [17.5,20.6,"Le zinc et la biotine contribuent au maintien de cheveux normaux."],
+ [20.6,23.5,"On les a réunis dans un gummy."],[23.5,26.6,"R92. 2 gummies par jour."],[26.6,31,"-45 % sur la cure 3 mois."]];
+window.DURATION=31;
+const v3=new THREE.Vector3();
+function proj(o){camera.updateMatrixWorld();o.getWorldPosition(v3);v3.project(camera);return[(v3.x+1)/2*W,(1-v3.y)/2*H]}
+let lastCap='';
+window.render=function(t){
+  // sous-titres
+  const c=CAPS.find(c=>t>=c[0]&&t<c[1]);let txt=c?c[2]:'';
+  if(c&&c[0]===13){const parts=['La cystine.','Le zinc.','La biotine.'];const n=t<14.3?1:t<15.6?2:3;txt=parts.slice(0,n).join(' ')}
+  if(txt!==lastCap){$('cap').textContent=txt;lastCap=txt}
+  const cp=c?seg(t,c[0],c[0]+.18):0;$('cap').style.opacity=c?cp*(1-seg(t,c[1]-.12,c[1])):0;$('cap').style.transform=`translateY(${(1-out(cp))*14}px)`;
+  if(c&&c[0]>=26.6){$('cap').style.top='1110px';$('cap').style.fontSize='64px'}else{$('cap').style.top='1330px';$('cap').style.fontSize='54px'}
+
+  // poussière
+  for(let i=0;i<dN;i++){const b=dB[i];dPos[i*3]=b[0]+Math.sin(t*.2+i)*.2;dPos[i*3+1]=((b[1]+t*.18+12)%24)-12;dPos[i*3+2]=b[2]}
+  dGeo.attributes.position.needsUpdate=true;
+  W1.visible=t<7.6;W2.visible=t>=7.2&&t<23;gum.visible=t>=20&&t<25.2;
+  orbs.forEach(o=>{o.g.visible=t>=13&&t<22.6;o.tag.style.opacity=0});
+  bloom.strength=.75;let fade=0;
+
+  if(t<7.6){
+    // croissance des cheveux
+    strands.forEach((s,i)=>{const g=out(seg(t,s.d*.9,s.d*.9+2.4+(i===0?0:.4)));s.geo.setDrawRange(0,Math.max(0,Math.floor(s.total*g/ (6*3))*6*3))});
+    // particules du follicule
+    for(let i=0;i<fpN;i++){const [a,th,rr]=fpSeed[i];const q=(a+t*.35)%1;const y=-2.25+q*2.25;const rad=(.05+.1*rr)*(1-q*.5);
+      fpPos[i*3]=Math.cos(th+t)*rad;fpPos[i*3+1]=y;fpPos[i*3+2]=Math.sin(th+t)*rad}
+    fpGeo.attributes.position.needsUpdate=true;
+    foll.userData.core.scale.setScalar(1+.15*Math.sin(t*5));
+    // caméra : vue large -> plongée -> gros plan bulbe
+    const a=seg(t,2.4,4.6),b=seg(t,4.4,7.4);
+    const p1=new THREE.Vector3(Math.sin(t*.15)*10,5,Math.cos(t*.15)*10),l1=new THREE.Vector3(0,1.1,0);
+    const p2=new THREE.Vector3(2.6,-1.2,3.6),l2=new THREE.Vector3(0,-1.4,0);
+    const p3=new THREE.Vector3(1.3,-1.9,2.1),l3=new THREE.Vector3(0,-2.1,0);
+    const P=p1.clone().lerp(p2,inout(a)).lerp(p3,inout(b)),Lk=l1.clone().lerp(l2,inout(a)).lerp(l3,inout(b));
+    P.x+=Math.sin(t*.7)*.1*b;camera.position.copy(P);camera.lookAt(Lk);
+    fade=Math.max(fade,seg(t,7.2,7.5));
+  }
+  if(t>=7.2&&t<23){
+    const l=t-7.4;
+    W2.rotation.set(0,l*.35,.35);W2.position.set(0,0,0);
+    // assemblage des briques 7.4 -> 10.4
+    const f=seg(t,7.5,10.2);
+    for(let i=0;i<kN;i++){const q=inout(seg(f,kD[i]*.6,kD[i]*.6+.4));const a=kFrom[i],b=kTo[i];
+      kPos[i*3]=lerp(a.x,b.x,q);kPos[i*3+1]=lerp(a.y,b.y,q);kPos[i*3+2]=lerp(a.z,b.z,q)}
+    kGeo.attributes.position.needsUpdate=true;kPts.material.opacity=1-seg(t,10.4,11.5)*.7;
+    helices.forEach(h=>h.geo.setDrawRange(0,Math.floor(h.total*out(seg(t,7.6,10.2))/18)*18));
+    rungs.forEach((rg,j)=>{rg.mt.opacity=.85*seg(f,(rg.s+L/2)/L*.8+.1,(rg.s+L/2)/L*.8+.2)});
+    // caméra
+    const zoom=t<10.4?lerp(8,5.2,inout(seg(t,7.4,10.4))):lerp(5.2,8,inout(seg(t,10.4,13)));
+    camera.position.set(Math.sin(l*.2)*.6,.2,zoom);camera.lookAt(0,0,0);
+    W2.children.forEach(o=>{if(o.material)o.material.opacity=o.material.opacity});
+    fade=Math.max(fade,1-seg(t,7.5,7.8));
+    // actifs
+    const appear=[13.05,14.35,15.65];
+    orbs.forEach((o,i)=>{const ap=out(seg(t,appear[i],appear[i]+.5));
+      let p=o.home.clone();const orbit=seg(t,17.5,20.6);const ang=(t-17.5)*.8*orbit;
+      p.applyAxisAngle(new THREE.Vector3(0,1,0),ang);
+      const into=inout(seg(t,20.9,22.4));p.lerp(new THREE.Vector3(0,0,0),into);
+      o.g.position.copy(p);o.g.scale.setScalar(ap*(1-into*.8)+.0001);o.g.rotation.set(t*.6,t*.9,0);o.g.userData.ring.rotation.set(t,t*.7,0);
+      const [x,y]=proj(o.g);o.tag.style.left=x+'px';o.tag.style.top=(y-85)+'px';o.tag.style.opacity=ap*(1-seg(t,20.6,21));});
+    // la fibre s'efface quand le gummy arrive
+    W2.visible=t<21.6;
+    if(t>=20.4){fade=Math.max(fade,0)}
+  }
+  if(t>=20&&t<25.2){
+    const l=t-20.6;const ap=out(seg(t,20.6,21.4));
+    gum.scale.setScalar(.75*ap*(1+.06*Math.sin(t*3))+.0001);gum.rotation.set(.5+l*.4,l*.7,.2);
+    gum.userData.scan.position.y=Math.sin(t*2.2)*.8;
+    if(t>=22.6){camera.position.set(0,.1,lerp(7.5,5.8,inout(seg(t,22.6,25))));camera.lookAt(0,0,0)}
+    bloom.strength=.75+Math.max(0,1-Math.abs(t-24.4)/.5)*2;
+    gum.children.forEach(o=>{if(o.material)o.material.opacity=o.material.userData?.o??o.material.opacity});
+    gum.visible=t<24.7;
+  }
+  // bouteille réelle
+  {const ap=out(seg(t,24.3,25.1));let top=330,sc=1.1-.1*ap;
+   if(t>=26.6){const p=inout(seg(t,26.6,27.3));top=lerp(330,120,p);sc=lerp(1,.78,p)}
+   $('bottle').style.opacity=ap;$('bottle').style.top=top+'px';$('bottle').style.transform=`scale(${sc})`;}
+  {const l=t-26.6,on=t>=26.6;const p=seg(l,.5,.9);$('offer').style.opacity=on?out(p):0;$('offer').style.transform=`translateY(${(1-out(p))*30}px)`;
+   $('strike').style.width=(out(seg(l,.9,1.2))*112)+'%';
+   $('cta').style.transform=`scale(${1+.04*Math.max(0,Math.sin((l-1.3)*Math.PI*2.2))*(l>1.3)})`;
+   $('legal').style.opacity=on?seg(l,1.2,1.6):0;
+   if(on){dust.visible=true}}
+  $('fade').style.opacity=fade;
+  composer.render();
+};
+await document.fonts.ready;
+window.render(0);
+window.READY=true;
+</script>
+</body></html>
