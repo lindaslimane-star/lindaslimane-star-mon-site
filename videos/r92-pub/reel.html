@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8">
+<style>
+@font-face{font-family:Oswald;font-weight:700;src:url(node_modules/@fontsource/oswald/files/oswald-latin-700-normal.woff2)}
+@font-face{font-family:Playfair;font-weight:400;font-style:italic;src:url(node_modules/@fontsource/playfair-display/files/playfair-display-latin-400-italic.woff2)}
+:root{--navy:#0c1a3a;--red:#e0252b}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1080px;height:1920px;overflow:hidden;background:transparent}
+body{font-family:Inter,"Noto Color Emoji",sans-serif;color:#111}
+.g{position:absolute;opacity:0;will-change:transform}
+.center{left:0;right:0;text-align:center}
+/* style légende TikTok : texte noir sur blocs blancs */
+.cap{display:inline;background:#fff;color:#111;font-weight:800;font-size:76px;line-height:1.42;padding:6px 22px;border-radius:18px;
+  box-decoration-break:clone;-webkit-box-decoration-break:clone}
+.cap.red{background:var(--red);color:#fff}
+.cap.big{font-size:92px}
+.chip{display:inline-block;font-family:Oswald;font-weight:700;font-size:64px;letter-spacing:3px;padding:8px 34px;border-radius:16px;color:#fff;background:rgba(10,18,40,.88)}
+.chip.red{background:var(--red)}
+.flash{position:absolute;inset:0;background:#fff;opacity:0}
+.legal{font-size:22px;line-height:1.4;color:rgba(255,255,255,.6)}
+.cta{position:absolute;left:120px;right:120px;height:150px;border-radius:999px;background:var(--red);color:#fff;display:flex;align-items:center;justify-content:center;font-family:Oswald;font-weight:700;font-size:66px;letter-spacing:2px;box-shadow:0 20px 60px rgba(224,37,43,.6)}
+</style></head><body>
+
+<!-- A : accroche (après en premier) -->
+<div id="a1" class="g center" style="top:330px"><span class="cap big">Comment j'ai eu</span></div>
+<div id="a2" class="g center" style="top:470px"><span class="cap big">ces cheveux 😳</span></div>
+
+<!-- B : avant -->
+<div id="b1" class="g center" style="top:330px"><span class="cap big red">…en partant de ÇA</span></div>
+<div id="bchip" class="g" style="left:50px;top:1330px"><span class="chip">AVANT</span></div>
+
+<!-- C : gummies -->
+<div id="c1" class="g center" style="top:300px"><span class="cap">Mon secret :</span></div>
+<div id="c2" class="g center" style="top:420px"><span class="cap red">2 gummies par jour 🍬</span></div>
+<div id="c3" class="g center" style="top:300px"><span class="cap" style="font-size:64px">L-Cystine · Zinc · Biotine</span></div>
+<div id="c4" class="g center" style="top:405px"><span class="cap" style="font-size:64px">Vegan · sans sucres ajoutés 🇫🇷</span></div>
+
+<!-- D : après -->
+<div id="dflash" class="flash"></div>
+<div id="d1" class="g center" style="top:330px"><span class="cap big">Après la cure R92 ✨</span></div>
+<div id="dchip" class="g" style="left:50px;top:1330px"><span class="chip red">APRÈS</span></div>
+
+<!-- E : split -->
+<div id="eline" class="g" style="left:536px;top:0;width:8px;height:1920px;background:#fff;box-shadow:0 0 24px rgba(0,0,0,.4)"></div>
+<div id="e1" class="g" style="left:40px;top:300px"><span class="chip">AVANT</span></div>
+<div id="e2" class="g" style="left:590px;top:300px"><span class="chip red">APRÈS</span></div>
+<div id="e3" class="g center" style="top:1250px"><span class="cap big">Sans commentaire 🤯</span></div>
+
+<!-- F : packshot + offre -->
+<div id="fbg" class="g" style="inset:0;background:radial-gradient(90% 60% at 50% 42%,#1b2a55 0%,#05070f 70%)"></div>
+<img id="fpack" class="g" src="assets/packshot.png" style="left:-60px;top:260px;width:1200px">
+<div id="f1" class="g center" style="top:150px"><span class="cap red">-45% sur la cure 3 mois</span></div>
+<div id="f2" class="g center" style="top:1080px;font-family:Oswald;font-weight:700;color:#fff;font-size:150px;line-height:1">
+  65,99 € <span style="font-size:70px;color:rgba(255,255,255,.55);position:relative;margin-left:10px">119,97 €<span id="strike" style="position:absolute;left:-6px;top:48%;height:7px;background:var(--red);width:0"></span></span></div>
+<div id="fcta" class="cta g" style="top:1300px">Je commande&nbsp;<span style="font-family:Inter;font-weight:800">→</span></div>
+<div id="furl" class="g center" style="top:1475px;color:#fff;font-weight:800;font-size:40px;letter-spacing:3px">R92HAIR.COM</div>
+<div id="flegal" class="g center legal" style="top:1540px;padding:0 90px">Le zinc et la biotine contribuent au maintien de cheveux normaux. Résultats individuels variables. Complément alimentaire à utiliser dans le cadre d'une alimentation variée et équilibrée et d'un mode de vie sain.</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const cl=(x,a=0,b=1)=>Math.min(b,Math.max(a,x));
+const seg=(t,a,b)=>cl((t-a)/(b-a));
+const out=x=>1-Math.pow(1-x,3);
+const back=x=>{const c=2;return 1+(c+1)*Math.pow(x-1,3)+c*Math.pow(x-1,2)};
+function set(el,o,tx=0,ty=0,s=1,r=0){el.style.opacity=o;el.style.transform=`translate(${tx}px,${ty}px) scale(${s}) rotate(${r}deg)`}
+// apparition "pop" entre start et end (avec sortie nette à end)
+function pop(id,t,start,end,dy=0){const p=seg(t,start,start+.22);const on=t>=start&&t<end;set($(id),on?cl(p*2):0,0,(1-out(p))*dy,on?.7+.3*back(p):1)}
+const T={A:0,B:1.6,C:4.4,D:8.72,E:11.92,F:13.72,END:17.53};
+window.DURATION=T.END;
+window.render=function(t){
+  // A
+  pop('a1',t,-0.3,T.B); pop('a2',t,-0.15,T.B);
+  // B
+  pop('b1',t,T.B+.05,T.C); pop('bchip',t,T.B+.3,T.C,30);
+  // légère secousse sur "ÇA"
+  if(t>T.B+.25&&t<T.B+.6){const k=(t-T.B-.25)/.35;$('b1').style.transform+=` rotate(${Math.sin(k*Math.PI*5)*2.5*(1-k)}deg)`}
+  // C
+  pop('c1',t,T.C+.05,T.C+2.2); pop('c2',t,T.C+.3,T.C+2.2);
+  pop('c3',t,T.C+2.25,T.D); pop('c4',t,T.C+2.5,T.D);
+  // D
+  $('dflash').style.opacity=t>=T.D&&t<T.D+.35?1-seg(t,T.D,T.D+.35):0;
+  pop('d1',t,T.D+.1,T.E); pop('dchip',t,T.D+.35,T.E,30);
+  // E
+  {const on=t>=T.E&&t<T.F;const p=seg(t,T.E,T.E+.25);
+   set($('eline'),on?1:0,0,0,1); $('eline').style.transform=`scaleY(${out(p)})`;
+   pop('e1',t,T.E+.1,T.F,30); pop('e2',t,T.E+.2,T.F,30); pop('e3',t,T.E+.6,T.F);}
+  // F
+  {const l=t-T.F, on=t>=T.F;
+   set($('fbg'),on?seg(l,0,.15):0);
+   const pp=seg(l,0,.5); set($('fpack'),on?cl(pp*2):0,0,(1-out(pp))*80,.92+.08*out(pp)+.05*seg(l,.5,3.8));
+   pop('f1',t,T.F+.15,99,0);
+   pop('f2',t,T.F+.6,99,30); $('strike').style.width=(out(seg(l,.95,1.25))*112)+'%';
+   const cp=seg(l,1.2,1.5); const pulse=1+.05*Math.max(0,Math.sin((l-1.6)*Math.PI*2.4))*(l>1.6);
+   set($('fcta'),on?cl(cp*2):0,0,(1-out(cp))*60,on?(.75+.25*back(cp))*pulse:1);
+   pop('furl',t,T.F+1.4,99); $('flegal').style.opacity=on?seg(l,1.5,1.9):0;}
+};
+window.render(0);
+</script>
+</body></html>
