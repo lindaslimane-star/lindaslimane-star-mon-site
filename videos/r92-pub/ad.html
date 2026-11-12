@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8">
+<style>
+@font-face{font-family:Oswald;font-weight:600;src:url(node_modules/@fontsource/oswald/files/oswald-latin-600-normal.woff2)}
+@font-face{font-family:Oswald;font-weight:700;src:url(node_modules/@fontsource/oswald/files/oswald-latin-700-normal.woff2)}
+@font-face{font-family:Playfair;font-weight:400;font-style:italic;src:url(node_modules/@fontsource/playfair-display/files/playfair-display-latin-400-italic.woff2)}
+@font-face{font-family:Playfair;font-weight:700;src:url(node_modules/@fontsource/playfair-display/files/playfair-display-latin-700-normal.woff2)}
+:root{--navy:#0c1a3a;--navy2:#17306a;--red:#d42a2a;--sky:rgb(215,233,255)}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1080px;height:1920px;overflow:hidden;background:var(--navy)}
+body{font-family:Inter,sans-serif;color:#fff}
+.scene{position:absolute;inset:0;overflow:hidden;opacity:0}
+.navybg{background:radial-gradient(120% 80% at 50% 30%,var(--navy2) 0%,var(--navy) 70%)}
+.abs{position:absolute}
+.osw{font-family:Oswald;font-weight:700;text-transform:uppercase;letter-spacing:1px;line-height:1}
+.center{left:0;right:0;text-align:center}
+.serif{font-family:Playfair;font-style:italic}
+.logo{font-family:Oswald;font-weight:700;font-size:96px;letter-spacing:8px}
+.logo small{display:block;font-family:Inter;font-weight:600;font-size:20px;letter-spacing:7px;margin-top:6px;opacity:.85}
+/* scene 2 */
+.pair{position:absolute;left:40px;top:330px;width:1000px;height:1300px;border-radius:36px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.45)}
+.pair img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.pair .wipe{position:absolute;top:0;bottom:0;width:8px;margin-left:-4px;background:#fff;box-shadow:0 0 30px rgba(255,255,255,.9)}
+.chip{position:absolute;top:28px;padding:12px 26px;border-radius:16px;font-family:Oswald;font-weight:700;font-size:44px;letter-spacing:2px}
+.chip.av{left:28px;background:rgba(12,26,58,.9)}
+.chip.ap{right:28px;background:var(--red)}
+.dur{position:absolute;bottom:30px;left:0;right:0;text-align:center}
+.dur span{display:inline-block;background:#fff;color:var(--navy);font-family:Oswald;font-weight:700;font-size:54px;padding:10px 34px;border-radius:999px}
+/* scene 3 */
+.badge{position:absolute;display:flex;align-items:center;gap:18px;background:#fff;color:var(--navy);border-radius:999px;padding:22px 36px;font-weight:700;font-size:40px;box-shadow:0 14px 40px rgba(12,26,58,.18);white-space:nowrap}
+.badge i{display:inline-block;width:46px;height:46px;border-radius:50%;background:var(--red);color:#fff;font-style:normal;font-size:30px;line-height:46px;text-align:center}
+.fr{display:inline-flex;width:54px;height:36px;border-radius:5px;overflow:hidden}
+.fr b{flex:1}
+/* scene 4 */
+.cta{position:absolute;left:110px;right:110px;top:1235px;height:150px;border-radius:999px;background:var(--red);display:flex;align-items:center;justify-content:center;font-family:Oswald;font-weight:700;font-size:64px;letter-spacing:2px;box-shadow:0 20px 60px rgba(212,42,42,.55)}
+.legal{position:absolute;left:90px;right:90px;top:1470px;text-align:center;font-size:23px;line-height:1.4;color:rgba(255,255,255,.62)}
+</style></head><body>
+
+<!-- SCENE 1 : accroche -->
+<div id="s1" class="scene navybg">
+  <img id="s1bottle" class="abs" src="assets/p0.jpg" style="left:240px;top:930px;width:600px;border-radius:50%;opacity:0">
+  <div id="s1a" class="abs center osw" style="top:330px;font-size:150px">Chute de</div>
+  <div id="s1b" class="abs center osw" style="top:490px;font-size:170px;color:var(--red)">cheveux ?</div>
+  <div id="s1c" class="abs center osw" style="top:700px;font-size:76px;font-weight:600">Longueurs qui stagnent ?</div>
+  <div id="s1d" class="abs center serif" style="top:1580px;font-size:58px">Regarde ces résultats <span style="font-family:Inter;font-style:normal">↓</span></div>
+</div>
+
+<!-- SCENE 2 : avant / après -->
+<div id="s2" class="scene navybg">
+  <div class="abs center osw" style="top:120px;font-size:120px">Avant <span style="color:var(--red)">/</span> Après</div>
+  <div class="abs center" style="top:262px;font-size:34px;font-weight:600;letter-spacing:4px;opacity:.85">PHOTOS CLIENTES R92</div>
+  <div id="pairs"></div>
+  <div id="s2logo" class="abs center logo" style="top:1660px;font-size:70px">R92<small style="font-size:16px">FUTURISTIC CARE FOR HAIR</small></div>
+</div>
+
+<!-- SCENE 3 : produit -->
+<div id="s3" class="scene" style="background:var(--sky);color:var(--navy)">
+  <div id="s3t1" class="abs center osw" style="top:150px;font-size:92px;font-weight:600">Les gummies</div>
+  <div id="s3t2" class="abs center osw" style="top:255px;font-size:130px;color:var(--red)">Pousse cheveux</div>
+  <img id="s3bottle" class="abs" src="assets/p0.jpg" style="left:90px;top:380px;width:900px;-webkit-mask-image:radial-gradient(circle at 50% 48%,#000 52%,transparent 70%);mask-image:radial-gradient(circle at 50% 48%,#000 52%,transparent 70%)">
+  <div id="b1" class="badge" style="top:1220px;left:90px"><i>✓</i>L-Cystine · Zinc · Biotine</div>
+  <div id="b2" class="badge" style="top:1350px;left:90px"><i>✓</i>Vegan · sans sucres ajoutés</div>
+  <div id="b3" class="badge" style="top:1480px;left:90px"><span class="fr"><b style="background:#1d3f9a"></b><b style="background:#fff;border-top:1px solid #ddd;border-bottom:1px solid #ddd"></b><b style="background:#e1262d"></b></span>Fabriqué en France</div>
+  <div id="b4" class="badge" style="top:1610px;left:90px"><i>2</i>gummies / jour · cure 30 jours</div>
+</div>
+
+<!-- SCENE 4 : offre -->
+<div id="s4" class="scene navybg">
+  <div id="s4logo" class="abs center logo" style="top:170px">R92<small>FUTURISTIC CARE FOR HAIR</small></div>
+  <div id="s4t" class="abs center osw" style="top:400px;font-size:96px;font-weight:600">Ta cure 3 mois</div>
+  <div id="s4old" class="abs center osw" style="top:540px;font-size:80px;font-weight:600;color:rgba(255,255,255,.55)"><span style="position:relative">119,97 €<span id="strike" style="position:absolute;left:-8px;top:46%;height:8px;background:var(--red);width:0"></span></span></div>
+  <div id="s4price" class="abs center osw" style="top:650px;font-size:230px">65,99 €</div>
+  <div id="s4badge" class="abs osw" style="left:730px;top:505px;width:150px;height:150px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:54px;transform:rotate(-12deg)">-45%</div>
+  <div id="s4per" class="abs center serif" style="top:950px;font-size:60px">soit 21,99 € par mois</div>
+  <div id="s4one" class="abs center" style="top:1060px;font-size:38px;font-weight:600;opacity:.8">ou 1 boîte (30 jours) : 29,99 €</div>
+  <div id="cta" class="cta">Je commande&nbsp;<span style="font-family:Inter;font-weight:800">→</span></div>
+  <div id="s4url" class="abs center" style="top:1400px;font-size:40px;font-weight:700;letter-spacing:3px">R92HAIR.COM</div>
+  <div id="legal" class="legal">Le zinc et la biotine contribuent au maintien de cheveux normaux. Résultats individuels variables. Complément alimentaire à utiliser dans le cadre d'une alimentation variée et équilibrée et d'un mode de vie sain.</div>
+</div>
+
+<script>
+const PAIRS=[{n:9,label:'Après 1 mois'},{n:6,label:'Après 3 mois'},{n:10,label:'Après 1 an'}];
+const pairsEl=document.getElementById('pairs');
+PAIRS.forEach((p,i)=>{
+  const d=document.createElement('div');d.className='pair';d.id='pair'+i;
+  d.innerHTML=`<img src="assets/ba${p.n}_avant.jpg"><img class="ap" src="assets/ba${p.n}_apres.jpg">
+   <div class="wipe"></div><div class="chip av">AVANT</div><div class="chip ap">APRÈS</div>
+   <div class="dur"><span>${p.label}</span></div>`;
+  pairsEl.appendChild(d);
+});
+const $=id=>document.getElementById(id);
+const cl=(x,a=0,b=1)=>Math.min(b,Math.max(a,x));
+const seg=(t,a,b)=>cl((t-a)/(b-a));
+const out=x=>1-Math.pow(1-x,3);
+const back=x=>{const c=1.7;return 1+(c+1)*Math.pow(x-1,3)+c*Math.pow(x-1,2)};
+const inout=x=>x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2;
+function show(el,o,tx=0,ty=0,s=1,extra=''){el.style.opacity=o;el.style.transform=`translate(${tx}px,${ty}px) scale(${s}) ${extra}`}
+function pop(el,t,start,dur=.35,dy=60){const p=seg(t,start,start+dur);show(el,cl(p*2),0,(1-out(p))*dy,.85+.15*back(p))}
+
+// scene boundaries (seconds)
+const S=[[0,2.6],[2.6,10.4],[10.4,14.4],[14.4,19.5]];
+window.DURATION=19.5;
+function sceneOpacity(t,[a,b],i){
+  const fi=i===0?1:seg(t,a,a+.18), fo=i===S.length-1?1:1-seg(t,b-.0001,b+.18);
+  return Math.min(fi,fo);
+}
+window.render=function(t){
+  S.forEach((r,i)=>{$('s'+(i+1)).style.opacity=(t>=r[0]-0.01&&t<r[1]+.18)?sceneOpacity(t,r,i):0});
+  // S1
+  {const l=t;
+   pop($('s1a'),l,.05,.3,80); pop($('s1b'),l,.3,.35,80); pop($('s1c'),l,.85,.35,40); pop($('s1d'),l,1.6,.4,30);
+   const pb=seg(l,1.1,2.6); show($('s1bottle'),out(cl(pb*3))*1,0,0,.9+.12*pb);
+   $('s1bottle').style.filter='drop-shadow(0 30px 60px rgba(0,0,0,.4))';
+   // shake on "cheveux ?"
+   const sh=seg(l,.65,.95); $('s1b').style.transform+=` rotate(${Math.sin(sh*Math.PI*4)*3*(1-sh)}deg)`;
+  }
+  // S2
+  {const l=t-S[1][0], per=2.6;
+   PAIRS.forEach((p,i)=>{
+     const el=$('pair'+i), a=i*per, lt=l-a;
+     const vin=i===0?out(seg(lt,0,.35)):1, slideIn=i===0?0:(1-out(seg(lt,0,.3)))*1100;
+     const slideOut=i===PAIRS.length-1?0:-inout(seg(lt,per,per+.3))*1100;
+     el.style.opacity=(lt>=-0.01&&lt<per+.3)?vin:0;
+     el.style.transform=`translateX(${slideIn+slideOut}px) scale(${.94+.06*vin})`;
+     const w=inout(seg(lt,.75,1.55)); // wipe progress 0..1
+     el.querySelector('.ap').style.clipPath=`inset(0 ${100-w*100}% 0 0)`;
+     const wp=el.querySelector('.wipe'); wp.style.left=(w*100)+'%'; wp.style.opacity=(w>0&&w<1)?1:0;
+     el.querySelector('.chip.av').style.opacity=1-seg(lt,1.2,1.4);
+     const ap=el.querySelector('.chip.ap'); ap.style.opacity=seg(lt,1.3,1.5);
+     const du=el.querySelector('.dur'); const dp=seg(lt,1.45,1.8); du.style.opacity=dp; du.style.transform=`translateY(${(1-out(dp))*40}px)`;
+     // slow zoom
+     el.querySelectorAll('img').forEach(im=>im.style.transform=`scale(${1.04+.04*seg(lt,0,per)})`);
+   });
+  }
+  // S3
+  {const l=t-S[2][0];
+   pop($('s3t1'),l,.05,.3,40); pop($('s3t2'),l,.2,.35,50);
+   const b=seg(l,0,.6); show($('s3bottle'),cl(b*2),0,(1-out(b))*120,.9+.1*out(b)+.03*seg(l,.6,4));
+   ['b1','b2','b3','b4'].forEach((id,k)=>{const p=seg(l,.7+k*.32,1.05+k*.32);show($(id),cl(p*2),(1-out(p))*-500,0,1)});
+  }
+  // S4
+  {const l=t-S[3][0];
+   pop($('s4logo'),l,0,.3,30); pop($('s4t'),l,.15,.3,40); pop($('s4old'),l,.35,.3,30);
+   $('strike').style.width=(out(seg(l,.7,1))*110)+'%';
+   pop($('s4price'),l,.95,.4,0); $('s4price').style.transform=`scale(${.4+.6*back(seg(l,.95,1.35))})`;
+   const bp=seg(l,1.35,1.65); show($('s4badge'),cl(bp*3),0,0,back(bp),'rotate(-12deg)');
+   pop($('s4per'),l,1.6,.3,30); pop($('s4one'),l,1.8,.3,20);
+   const cp=seg(l,2.1,2.5); const pulse=1+.045*Math.max(0,Math.sin((l-2.5)*Math.PI*2.2))*(l>2.5);
+   show($('cta'),cl(cp*2),0,(1-out(cp))*80,(.8+.2*back(cp))*pulse);
+   pop($('s4url'),l,2.35,.3,20); $('legal').style.opacity=seg(l,2.4,2.8);
+  }
+};
+window.render(0);
+</script>
+</body></html>
