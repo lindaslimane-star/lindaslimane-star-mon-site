@@ -26,3 +26,9 @@ Rendu Three.js (gummies 3D, fibre de kératine, actifs en orbite, HUD) + rush «
 ## Vidéo hologramme v4 (style « Comment ça fonctionne », ~31 s)
 Fond noir, hologrammes cyan dans une bande centrale, sous-titres courts façon voix off.
 `node comp3d.js holo.html black31.mp4 ../R92_hologramme_v4.mp4` (black31.mp4 = 31 s de noir 1080×1920).
+
+## Voix off (vidéo hologramme)
+Voix de synthèse Piper `fr_FR-siwis-medium` (hors ligne, gratuite).
+- `voix/lines.tsv` : début, fin et texte de chaque phrase (écrit phonétiquement : « gummys », « R quatre-vingt-douze »).
+- `voix/build.py` : génère chaque phrase et la place à son horodatage → `vo/voice.wav`.
+- Mixage : voix +12 dB, ambiance de synthèse -8 dB avec ducking, normalisation -14 LUFS.
