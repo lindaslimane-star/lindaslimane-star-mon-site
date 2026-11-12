@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8">
+<style>
+@font-face{font-family:Playfair;font-weight:400;font-style:italic;src:url(node_modules/@fontsource/playfair-display/files/playfair-display-latin-400-italic.woff2)}
+@font-face{font-family:Oswald;font-weight:700;src:url(node_modules/@fontsource/oswald/files/oswald-latin-700-normal.woff2)}
+:root{--red:#ff3b3b;--blue:#5fb4ff;--glass:rgba(10,20,45,.62)}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1080px;height:1920px;overflow:hidden;background:transparent;color:#fff;font-family:Inter,sans-serif}
+#gl{position:absolute;inset:0;width:1080px;height:1920px}
+.L{position:absolute;opacity:0}
+.mono{font-family:"JetBrains Mono",monospace;letter-spacing:3px;text-transform:uppercase}
+.title{left:0;right:0;text-align:center;padding:30px 0;background:radial-gradient(60% 55% at 50% 50%,rgba(3,8,22,.55),transparent 75%);font-weight:300;font-size:74px;line-height:1.12;letter-spacing:-1px;text-shadow:0 4px 30px rgba(0,0,0,.6)}
+.title em{font-family:Playfair;font-style:italic;font-weight:400;font-size:84px;letter-spacing:0;color:#fff}
+.title em.r{color:#ff6b6b}
+.cap{left:110px;right:110px;text-align:center;font-weight:400;font-size:40px;line-height:1.4;color:rgba(255,255,255,.88);text-shadow:0 2px 20px rgba(0,0,0,.8)}
+/* HUD */
+.br{position:absolute;width:70px;height:70px;border-color:rgba(140,200,255,.7);border-style:solid;border-width:0}
+.tag{position:absolute;font-family:"JetBrains Mono",monospace;font-size:24px;letter-spacing:3px;color:#cfe6ff;padding:8px 16px;border:1px solid rgba(120,190,255,.6);border-radius:8px;background:rgba(6,14,32,.6);white-space:nowrap;transform:translate(-50%,-50%)}
+.card{position:absolute;left:90px;right:90px;top:1210px;height:300px;border-radius:34px;background:var(--glass);border:1.5px solid rgba(130,195,255,.55);
+  box-shadow:0 0 60px rgba(60,140,255,.25),inset 0 0 40px rgba(80,160,255,.08);backdrop-filter:blur(14px);padding:34px 40px;display:flex;gap:36px;align-items:center}
+.card .ring{flex:0 0 200px;height:200px;position:relative}
+.card .ring svg{position:absolute;inset:0}
+.card .ring b{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:Oswald;font-size:56px;font-weight:700;line-height:1}
+.card .ring b small{font-family:"JetBrains Mono";font-size:18px;letter-spacing:2px;margin-top:8px;color:#9ccaff;font-weight:400}
+.card h3{font-family:"JetBrains Mono";font-weight:500;font-size:26px;letter-spacing:3px;color:#9ccaff;margin-bottom:12px}
+.card p{font-size:40px;line-height:1.25;font-weight:600}
+.check{position:absolute;left:130px;padding:14px 34px 14px 18px;border-radius:999px;background:rgba(6,14,32,.72);border:1px solid rgba(120,190,255,.35);backdrop-filter:blur(8px);display:flex;align-items:center;gap:26px;font-size:46px;font-weight:600}
+.check i{width:58px;height:58px;border-radius:50%;border:2px solid var(--blue);display:flex;align-items:center;justify-content:center;font-style:normal;color:var(--blue);font-size:32px;box-shadow:0 0 24px rgba(95,180,255,.5)}
+.cta{position:absolute;left:120px;right:120px;height:150px;border-radius:999px;background:linear-gradient(90deg,#ff3b3b,#d4142a);display:flex;align-items:center;justify-content:center;font-family:Oswald;font-weight:700;font-size:66px;letter-spacing:2px;box-shadow:0 0 70px rgba(255,59,59,.65)}
+#bottle{position:absolute;left:-270px;width:1620px;mix-blend-mode:screen;opacity:0}
+#flash{position:absolute;inset:0;background:#cfe6ff;opacity:0}
+#scan{position:absolute;left:0;right:0;height:4px;background:linear-gradient(90deg,transparent,#8fd0ff,transparent);box-shadow:0 0 30px #5fb4ff;opacity:0}
+</style>
+<script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/"}}</script>
+</head><body>
+<canvas id="gl" width="1080" height="1920"></canvas>
+<img id="bottle" src="assets/packshot.png">
+<svg id="lead" class="L" width="1080" height="1920" style="left:0;top:0;opacity:1;overflow:visible"><line id="leadl" stroke="#8fd0ff" stroke-width="2.5" stroke-dasharray="8 8"/><circle id="leadc" r="10" fill="none" stroke="#8fd0ff" stroke-width="3"/></svg>
+<div id="tags"></div>
+
+<!-- HUD permanent -->
+<div id="hud" class="L" style="inset:0;opacity:1">
+  <div class="br" style="left:40px;top:150px;border-left-width:3px;border-top-width:3px"></div>
+  <div class="br" style="right:40px;top:150px;border-right-width:3px;border-top-width:3px"></div>
+  <div class="br" style="left:40px;bottom:330px;border-left-width:3px;border-bottom-width:3px"></div>
+  <div class="br" style="right:40px;bottom:330px;border-right-width:3px;border-bottom-width:3px"></div>
+  <div class="mono" style="position:absolute;left:130px;top:170px;font-size:22px;color:#9ccaff">R92 // HAIR LAB</div>
+  <div id="hudr" class="mono" style="position:absolute;right:130px;top:170px;font-size:22px;color:#9ccaff">01 / 07</div>
+  <div style="position:absolute;left:130px;right:130px;bottom:350px;height:3px;background:rgba(140,200,255,.2)"><div id="prog" style="height:100%;width:0;background:#8fd0ff;box-shadow:0 0 12px #5fb4ff"></div></div>
+</div>
+<div id="scan"></div>
+
+<!-- S1 -->
+<div id="t1" class="L title" style="top:330px">Tes cheveux se construisent<br><em>de l'intérieur.</em></div>
+<!-- S2 -->
+<div id="t2" class="L title" style="top:300px">Ton cheveu ?<br><em>De la kératine.</em></div>
+<div id="c2" class="L cap" style="top:1330px">Une protéine riche en <b>cystine</b>&nbsp;: ses liaisons donnent au cheveu sa solidité.</div>
+<!-- S3 -->
+<div id="t3" class="L title" style="top:290px">R92 Gummies<br><em class="r">10 actifs, 1 objectif.</em></div>
+<div id="c3" class="L cap" style="top:1450px">Une formule pensée pour l'entretien et la vitalité de tes cheveux.</div>
+<!-- S4 -->
+<div id="t4" class="L title" style="top:290px">Ce qu'il y a<br><em>dedans.</em></div>
+<div id="card" class="L card">
+  <div class="ring"><svg viewBox="0 0 200 200"><circle cx="100" cy="100" r="86" fill="none" stroke="rgba(140,200,255,.18)" stroke-width="12"/>
+    <circle id="ringc" cx="100" cy="100" r="86" fill="none" stroke="#8fd0ff" stroke-width="12" stroke-linecap="round" transform="rotate(-90 100 100)" stroke-dasharray="540.4" stroke-dashoffset="540.4" style="filter:drop-shadow(0 0 8px #5fb4ff)"/></svg>
+    <b><span id="rv">250</span><small id="ru">MG</small></b></div>
+  <div><h3 id="ch">L-CYSTINE</h3><p id="cp">Acide aminé clé de la kératine</p></div>
+</div>
+<!-- S5 -->
+<div id="t5" class="L title" style="top:300px">2 gummies<br><em>par jour.</em></div>
+<div id="c5" class="L cap" style="top:1380px">Vegan · sans gélatine animale · sans sucres ajoutés</div>
+<!-- S6 -->
+<div id="t6" class="L title" style="top:300px">Fabriqué<br><em>en France.</em></div>
+<div id="k1" class="L check" style="top:760px"><i>✓</i>Site certifié GMP</div>
+<div id="k2" class="L check" style="top:880px"><i>✓</i>Formule vegan</div>
+<div id="k3" class="L check" style="top:1000px"><i>✓</i>Sans sucres ajoutés</div>
+<div id="k4" class="L check" style="top:1120px"><i>✓</i>Cure de 30 jours · 60 gummies</div>
+<!-- S7 -->
+<div id="t7" class="L title" style="top:200px"><em class="r" style="font-size:96px">-45&nbsp;%</em><br>sur la cure 3 mois</div>
+<div id="p7" class="L" style="left:0;right:0;top:1120px;text-align:center;font-family:Oswald;font-weight:700;font-size:150px;line-height:1">65,99 € <span style="font-size:66px;color:rgba(255,255,255,.5);position:relative">119,97 €<span id="strike" style="position:absolute;left:-6px;top:48%;height:6px;background:var(--red);width:0"></span></span></div>
+<div id="cta" class="L cta" style="top:1300px">Je commande&nbsp;<span style="font-family:Inter;font-weight:800">→</span></div>
+<div id="url" class="L mono" style="left:0;right:0;top:1465px;text-align:center;font-size:34px;font-weight:700">r92hair.com</div>
+<div id="legal" class="L" style="left:90px;right:90px;top:1520px;text-align:center;font-size:21px;line-height:1.4;color:rgba(255,255,255,.55)">Le zinc, la biotine et le sélénium contribuent au maintien de cheveux normaux ; le cuivre à la pigmentation normale des cheveux ; la vitamine B6 à la synthèse normale de la cystéine. Complément alimentaire à utiliser dans le cadre d'une alimentation variée et équilibrée et d'un mode de vie sain.</div>
+<div id="flash"></div>
+
+<script type="module">
+import * as THREE from 'three';
+import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+
+const W=1080,H=1920;
+const $=id=>document.getElementById(id);
+const cl=(x,a=0,b=1)=>Math.min(b,Math.max(a,x));
+const seg=(t,a,b)=>cl((t-a)/(b-a));
+const out=x=>1-Math.pow(1-x,3);
+const inout=x=>x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2;
+const back=x=>{const c=1.8;return 1+(c+1)*Math.pow(x-1,3)+c*Math.pow(x-1,2)};
+function rng(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const R=rng(92);
+
+// ---------- renderer ----------
+const renderer=new THREE.WebGLRenderer({canvas:$('gl'),antialias:true,alpha:false,preserveDrawingBuffer:true});
+renderer.setPixelRatio(1);renderer.setSize(W,H,false);
+renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.05;
+const scene=new THREE.Scene();
+const pmrem=new THREE.PMREMGenerator(renderer);
+scene.environment=pmrem.fromScene(new RoomEnvironment(),0.04).texture;
+{ // fond dégradé
+  const c=document.createElement('canvas');c.width=256;c.height=512;const g=c.getContext('2d');
+  const gr=g.createRadialGradient(128,200,10,128,220,420);gr.addColorStop(0,'#16285a');gr.addColorStop(.5,'#0a1430');gr.addColorStop(1,'#03060f');
+  g.fillStyle=gr;g.fillRect(0,0,256,512);const tx=new THREE.CanvasTexture(c);tx.colorSpace=THREE.SRGBColorSpace;scene.background=tx;
+}
+const camera=new THREE.PerspectiveCamera(38,W/H,.1,200);
+scene.add(new THREE.AmbientLight(0x6080ff,.25));
+const key=new THREE.DirectionalLight(0xffffff,2.2);key.position.set(3,4,5);scene.add(key);
+const rim=new THREE.PointLight(0x4aa0ff,40,30);rim.position.set(-4,2,-3);scene.add(rim);
+const rim2=new THREE.PointLight(0xff3050,25,30);rim2.position.set(4,-3,-2);scene.add(rim2);
+
+const composer=new EffectComposer(renderer);
+composer.setPixelRatio(1);composer.setSize(W,H);
+composer.addPass(new RenderPass(scene,camera));
+const bloom=new UnrealBloomPass(new THREE.Vector2(W/2,H/2),0.6,0.5,0.86);composer.addPass(bloom);
+composer.addPass(new OutputPass());
+
+// ---------- gummy ----------
+const gumGeo=new RoundedBoxGeometry(1,1,1,6,.2);
+{const p=gumGeo.attributes.position,n=gumGeo.attributes.normal;
+ for(let i=0;i<p.count;i++){const x=p.getX(i),y=p.getY(i),z=p.getZ(i);const d=(Math.sin(x*23+y*7)*Math.sin(y*19+z*11)*Math.sin(z*17+x*5))*.018;
+  p.setXYZ(i,x+n.getX(i)*d,y+n.getY(i)*d,z+n.getZ(i)*d)} gumGeo.computeVertexNormals();}
+const gumMat=new THREE.MeshPhysicalMaterial({color:0x780914,roughness:.36,metalness:0,clearcoat:.7,clearcoatRoughness:.25,sheen:1,sheenColor:new THREE.Color(0xc03048),sheenRoughness:.6,emissive:0x3a0008,emissiveIntensity:.4});
+const sugarGeo=new THREE.BoxGeometry(.02,.02,.02);
+const sugarMat=new THREE.MeshStandardMaterial({color:0xc98f98,roughness:.55,metalness:0});
+function makeGummy(n=520){
+  const g=new THREE.Group();g.add(new THREE.Mesh(gumGeo,gumMat));
+  const im=new THREE.InstancedMesh(sugarGeo,sugarMat,n);const m=new THREE.Matrix4(),q=new THREE.Quaternion(),e=new THREE.Euler();
+  for(let i=0;i<n;i++){const f=Math.floor(R()*6),u=(R()-.5)*.84,v=(R()-.5)*.84,o=.505;
+    const pos=[[o,u,v],[-o,u,v],[u,o,v],[u,-o,v],[u,v,o],[u,v,-o]][f];
+    e.set(R()*6,R()*6,R()*6);q.setFromEuler(e);const s=.5+R()*.9;
+    m.compose(new THREE.Vector3(...pos),q,new THREE.Vector3(s,s,s));im.setMatrixAt(i,m)}
+  g.add(im);return g;
+}
+
+// ---------- poussière ----------
+const dustN=1400,dustPos=new Float32Array(dustN*3),dustBase=[];
+for(let i=0;i<dustN;i++){const p=[(R()-.5)*16,(R()-.5)*26,-R()*22+4];dustBase.push(p);dustPos.set(p,i*3)}
+const dustGeo=new THREE.BufferGeometry();dustGeo.setAttribute('position',new THREE.BufferAttribute(dustPos,3));
+const dust=new THREE.Points(dustGeo,new THREE.PointsMaterial({color:0x7fbfff,size:.035,transparent:true,opacity:.75,depthWrite:false,blending:THREE.AdditiveBlending}));
+scene.add(dust);
+
+// ---------- S1 : gummy héros ----------
+const hero=makeGummy(420);scene.add(hero);
+
+// ---------- S2 : fibre de kératine ----------
+const fiber=new THREE.Group();scene.add(fiber);
+const L=9,k=2.2,r=.42;
+const helixMat=new THREE.MeshStandardMaterial({color:0x0b2a66,emissive:0x2f86ff,emissiveIntensity:.55,roughness:.3,metalness:.3});
+const hp=(i,s)=>{const th=s*k+i*2*Math.PI/3;return new THREE.Vector3(r*Math.cos(th),s,r*Math.sin(th))};
+for(let i=0;i<3;i++){const pts=[];for(let s=-L/2;s<=L/2;s+=.05)pts.push(hp(i,s));
+  fiber.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts),400,.06,10,false),helixMat))}
+const rungs=[];const rungGeo=new THREE.CylinderGeometry(.03,.03,1,8);
+for(let s=-L/2+.2,j=0;s<L/2;s+=.28,j++){const a=hp(j%3,s),b=hp((j+1)%3,s);
+  const mat=new THREE.MeshStandardMaterial({color:0x330008,emissive:0xff2a40,emissiveIntensity:0});
+  const m=new THREE.Mesh(rungGeo,mat);m.position.copy(a).add(b).multiplyScalar(.5);
+  m.scale.y=a.distanceTo(b);m.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),b.clone().sub(a).normalize());
+  fiber.add(m);rungs.push({m,mat,s,target:m.position.clone()})}
+// gaine (cuticule) en anneaux
+const sheathMat=new THREE.MeshBasicMaterial({color:0x5fb4ff,transparent:true,opacity:.12,blending:THREE.AdditiveBlending,depthWrite:false});
+for(let s=-L/2;s<=L/2;s+=.35){const t=new THREE.Mesh(new THREE.TorusGeometry(.78,.008,6,64),sheathMat);t.rotation.x=Math.PI/2;t.position.y=s;fiber.add(t)}
+// particules de cystine
+const cysN=rungs.length*5,cysPos=new Float32Array(cysN*3),cysFrom=[],cysTo=[],cysDelay=[];
+for(let i=0;i<cysN;i++){const rg=rungs[i%rungs.length];cysTo.push(rg.target);
+  cysFrom.push(new THREE.Vector3((R()-.5)*10,(R()-.5)*14,(R()-.5)*8));cysDelay.push(R())}
+const cysGeo=new THREE.BufferGeometry();cysGeo.setAttribute('position',new THREE.BufferAttribute(cysPos,3));
+const cys=new THREE.Points(cysGeo,new THREE.PointsMaterial({color:0xff4a5a,size:.09,transparent:true,depthWrite:false,blending:THREE.AdditiveBlending}));
+fiber.add(cys);
+
+// ---------- anneaux (S3/S7) ----------
+const rings=new THREE.Group();scene.add(rings);
+[[1.9,0x5fb4ff,1.2],[2.25,0xff3b4f,1.35],[2.6,0x5fb4ff,1.1]].forEach(([rad,c,tilt],i)=>{
+  const m=new THREE.Mesh(new THREE.TorusGeometry(rad,.012,8,160),new THREE.MeshBasicMaterial({color:c,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false}));
+  m.rotation.x=tilt;m.userData.i=i;rings.add(m);
+  // points lumineux sur l'anneau
+  const dg=new THREE.SphereGeometry(.05,12,12);for(let a=0;a<3;a++){const d=new THREE.Mesh(dg,new THREE.MeshBasicMaterial({color:0xffffff}));d.position.set(rad*Math.cos(a*2.1),rad*Math.sin(a*2.1),0);m.add(d)}
+});
+// particules qui convergent (S3)
+const convN=900,convPos=new Float32Array(convN*3),convFrom=[];
+for(let i=0;i<convN;i++){const th=R()*Math.PI*2,ph=Math.acos(2*R()-1),d=6+R()*8;convFrom.push(new THREE.Vector3(d*Math.sin(ph)*Math.cos(th),d*Math.cos(ph),d*Math.sin(ph)*Math.sin(th)))}
+const convGeo=new THREE.BufferGeometry();convGeo.setAttribute('position',new THREE.BufferAttribute(convPos,3));
+const conv=new THREE.Points(convGeo,new THREE.PointsMaterial({color:0xaad6ff,size:.06,transparent:true,depthWrite:false,blending:THREE.AdditiveBlending}));scene.add(conv);
+
+// ---------- S4 : gummy central + 10 actifs ----------
+const core=makeGummy(380);scene.add(core);
+const ACT=[['L-Cys',0xff3b4f],['Zn',0xb8d4ff],['B8',0xffc94a],['Se',0xb48cff],['Cu',0xe0874a],['B6',0x5fe0ff],['C',0xffa040],['B9',0x7cff9a],['B12',0xff7ad0],['Bambou',0x9be37a]];
+const orbs=ACT.map(([n,c],i)=>{const m=new THREE.Mesh(new THREE.SphereGeometry(.2,32,32),new THREE.MeshPhysicalMaterial({color:c,emissive:c,emissiveIntensity:.35,metalness:.6,roughness:.18,clearcoat:1}));
+  scene.add(m);const tag=document.createElement('div');tag.className='tag';tag.textContent=n;$('tags').appendChild(tag);return{m,tag,n,ph:i/ACT.length*Math.PI*2,rad:2.1+(i%2)*.45}});
+const BEATS=[{on:['L-Cys'],v:'250',u:'MG',h:'L-CYSTINE',p:'Acide aminé clé de la kératine',g:1},
+ {on:['Zn','B8','Se'],v:'100%',u:'VNR BIOTINE',h:'ZINC · BIOTINE · SÉLÉNIUM',p:'Contribuent au maintien de cheveux normaux',g:1},
+ {on:['Cu'],v:'30%',u:'VNR',h:'CUIVRE',p:'Contribue à la pigmentation normale des cheveux',g:.3},
+ {on:['B6'],v:'100%',u:'VNR',h:'VITAMINE B6',p:'Contribue à la synthèse normale de la cystéine',g:1}];
+
+// ---------- S6 : pluie de gummies ----------
+const rain=[];for(let i=0;i<11;i++){const g=makeGummy(160);g.userData={x:(R()-.5)*7,z:-3-R()*5,d:R()*1.2,sp:.8+R()*.6,rx:R()*4,ry:R()*4,s:.55+R()*.5};scene.add(g);rain.push(g)}
+
+// ---------- timeline ----------
+const T={S1:0,S2:3.5,S3:8.5,S4:12.5,S5:24.5,S6:26.97,S7:29.5,END:33.5};
+window.DURATION=T.END;
+const SC=['S1','S2','S3','S4','S5','S6','S7','END'];
+function sceneIdx(t){for(let i=SC.length-2;i>=0;i--)if(t>=T[SC[i]])return i;return 0}
+function show(id,o,dy=0,s=1){const e=$(id);e.style.opacity=o;e.style.transform=`translateY(${dy}px) scale(${s})`}
+function txt(id,t,a,b,dy=40){const p=seg(t,a,a+.5);const o=t<a||t>=b?0:Math.min(out(p),1-seg(t,b-.25,b));show(id,o,(1-out(p))*dy)}
+const v3=new THREE.Vector3();
+function proj(obj){obj.getWorldPosition(v3);v3.project(camera);return[(v3.x+1)/2*W,(1-v3.y)/2*H,v3.z]}
+
+window.render=function(t){
+  const si=sceneIdx(t), S=SC[si];
+  $('hudr').textContent=`0${si+1} / 07`;
+  $('prog').style.width=(t/T.END*100)+'%';
+  // flash de transition
+  let fl=0;for(const k of ['S2','S3','S4','S6','S7']){fl=Math.max(fl,(1-seg(t,T[k],T[k]+.35))*(t>=T[k]?1:0)*.85)}
+  $('flash').style.opacity=fl;
+  // scan line
+  const sp=(t*0.45)%1;$('scan').style.top=(150+sp*1440)+'px';$('scan').style.opacity=S==='S5'?0:.35;
+
+  // visibilité 3D
+  const in3d=S!=='S5';$('gl').style.opacity=in3d?1:0;
+  hero.visible=S==='S1';fiber.visible=S==='S2';conv.visible=S==='S3';rings.visible=S==='S3'||S==='S7';
+  core.visible=S==='S4';orbs.forEach(o=>{o.m.visible=S==='S4';o.tag.style.opacity=0});rain.forEach(g=>g.visible=S==='S6');
+  $('leadl').style.opacity=0;$('leadc').style.opacity=0;
+
+  // poussière
+  for(let i=0;i<dustN;i++){const b=dustBase[i];dustPos[i*3]=b[0]+Math.sin(t*.3+i)*.15;dustPos[i*3+1]=((b[1]+t*.25+13)%26)-13;dustPos[i*3+2]=b[2]}
+  dustGeo.attributes.position.needsUpdate=true;
+  camera.position.set(0,0,7);camera.lookAt(0,0,0);bloom.strength=.6;
+
+  // --- S1 hook
+  if(S==='S1'){const l=t;const p=out(seg(l,0,1.4));
+    hero.position.set(0,-.95+(1-p)*.5,-26*(1-p));hero.rotation.set(l*1.1+.6,l*1.6+.3,l*.4);hero.scale.setScalar(1.2+.1*seg(l,1.4,3.5));
+    camera.position.set(Math.sin(l*.6)*.3,.1,6.2-l*.15);camera.lookAt(0,-.4,0);bloom.strength=.6+(1-seg(l,0,.6))*1.2;}
+  txt('t1',t,T.S1+.35,T.S2);
+
+  // --- S2 fibre
+  if(S==='S2'){const l=t-T.S2;
+    fiber.rotation.set(0,l*.5,.55);fiber.position.set(.2,-.9,0);fiber.scale.setScalar(.8);
+    camera.position.set(0,0,8.5-l*.4);camera.lookAt(0,-.4,0);
+    const fill=seg(l,.6,4.2);
+    for(let i=0;i<cysN;i++){const d=cysDelay[i]*.7;const q=inout(seg(fill,d*.8,d*.8+.3));const a=cysFrom[i],b=cysTo[i];
+      cysPos[i*3]=a.x+(b.x-a.x)*q;cysPos[i*3+1]=a.y+(b.y-a.y)*q;cysPos[i*3+2]=a.z+(b.z-a.z)*q}
+    cysGeo.attributes.position.needsUpdate=true;
+    rungs.forEach((rg,j)=>{const on=seg(fill,(j%rungs.length)/rungs.length*.75+.12,(j%rungs.length)/rungs.length*.75+.25);rg.mat.emissiveIntensity=on*1.8})}
+  txt('t2',t,T.S2+.2,T.S3);txt('c2',t,T.S2+1.2,T.S3,20);
+
+  // --- S3 produit
+  {const l=t-T.S3, on=S==='S3', on7=S==='S7';
+   if(on){const q=inout(seg(l,0,1.6));
+     for(let i=0;i<convN;i++){const a=convFrom[i];const k=1-q;const sw=l*.6;
+       const x=a.x*k,z=a.z*k;convPos[i*3]=x*Math.cos(sw)-z*Math.sin(sw);convPos[i*3+1]=a.y*k-.2;convPos[i*3+2]=x*Math.sin(sw)+z*Math.cos(sw)}
+     convGeo.attributes.position.needsUpdate=true;conv.material.opacity=1-seg(l,1.5,1.9);
+     bloom.strength=.6+Math.max(0,1-Math.abs(l-1.6)/.4)*1.4}
+   if(on||on7){const l2=on?l:t-T.S7;rings.position.set(0,on?-.55:.5,0);rings.children.forEach((m,i)=>{m.rotation.z=l2*(.5+i*.25)*(i%2?-1:1);m.material.opacity=out(seg(l2,on?1.3:0,on?2:.6))});
+     rings.scale.setScalar(on?.9:.75)}
+   // bouteille (HTML)
+   let bo=0,btop=440,bs=.8;
+   if(on){const p=seg(l,1.4,2.1);bo=out(p);bs=1-.2*out(p)+.03*seg(l,2.1,4)}
+   if(on7){const p=seg(t-T.S7,0,.5);bo=out(p);btop=230;bs=.6+.03*seg(t-T.S7,.5,4)}
+   $('bottle').style.opacity=bo;$('bottle').style.top=btop+'px';$('bottle').style.transform=`scale(${bs})`;
+  }
+  txt('t3',t,T.S3+1.8,T.S4);txt('c3',t,T.S3+2.2,T.S4,20);
+
+  // --- S4 actifs
+  if(S==='S4'){const l=t-T.S4;const b=Math.min(3,Math.floor(l/3));const bl=l-b*3;const B=BEATS[b];
+    core.position.set(0,.35,0);core.rotation.set(l*.5,l*.7,.2);core.scale.setScalar(1.15*out(seg(l,0,.6))+.001);
+    camera.position.set(Math.sin(l*.15)*.6,.3,7.6);camera.lookAt(0,.3,0);
+    let lead=null;
+    orbs.forEach((o,i)=>{const a=o.ph+l*.38;const hi=B.on.includes(o.n);
+      o.m.position.set(Math.cos(a)*o.rad,.35+Math.sin(a)*o.rad*.32+Math.sin(a*2+i)*.12,Math.sin(a)*o.rad*.9);
+      const pop=hi?back(seg(bl,.05,.45)):0;o.m.scale.setScalar((.85+pop*.85)*out(seg(l,.2+i*.05,.7+i*.05)));
+      o.m.material.emissiveIntensity=hi?1.6:.35;
+      const [x,y,z]=proj(o.m);o.tag.style.left=x+'px';o.tag.style.top=(y-62*(hi?1.4:1))+'px';
+      o.tag.style.opacity=(hi?1:.55)*seg(l,.5,1);o.tag.style.borderColor=hi?'#fff':'';o.tag.style.fontSize=hi?'30px':'22px';
+      if(hi&&!lead)lead=[x,y]});
+    // carte
+    const cp=seg(bl,.15,.55);const co=b<3||bl<2.75?1:1-seg(bl,2.75,3);
+    $('card').style.opacity=out(cp)*Math.min(co,1-seg(l,11.75,12));$('card').style.transform=`translateY(${(1-out(cp))*60}px)`;
+    $('rv').textContent=B.v;$('ru').textContent=B.u;$('ch').textContent=B.h;$('cp').textContent=B.p;
+    $('ringc').setAttribute('stroke-dashoffset',540.4*(1-B.g*out(seg(bl,.3,1.2))));
+    if(lead){const lp=seg(bl,.35,.7);const cx=540,cy=1210;$('leadl').setAttribute('x1',lead[0]);$('leadl').setAttribute('y1',lead[1]);
+      $('leadl').setAttribute('x2',lead[0]+(cx-lead[0])*lp);$('leadl').setAttribute('y2',lead[1]+(cy-lead[1])*lp);
+      $('leadc').setAttribute('cx',lead[0]);$('leadc').setAttribute('cy',lead[1]);$('leadl').style.opacity=lp>0?.9:0;$('leadc').style.opacity=lp>0?1:0;$('leadc').setAttribute('r',22+Math.sin(l*6)*4)}
+  } else $('card').style.opacity=0;
+  txt('t4',t,T.S4+.2,T.S5);
+
+  // --- S5 rush
+  txt('t5',t,T.S5+.1,T.S6);txt('c5',t,T.S5+.5,T.S6,20);
+  $('hud').style.opacity=1;
+
+  // --- S6 pluie
+  if(S==='S6'){const l=t-T.S6;camera.position.set(0,0,8);camera.lookAt(0,0,0);
+    rain.forEach(g=>{const u=g.userData;const y=5.5-((l*u.sp*2.6+u.d*4)%11);g.position.set(u.x,y,u.z);g.rotation.set(u.rx+l*1.2,u.ry+l*.9,0);g.scale.setScalar(u.s)})}
+  txt('t6',t,T.S6+.1,T.S7);['k1','k2','k3','k4'].forEach((id,i)=>txt(id,t,T.S6+.35+i*.25,T.S7,0));
+  ['k1','k2','k3','k4'].forEach((id,i)=>{const p=seg(t,T.S6+.35+i*.25,T.S6+.85+i*.25);if(t<T.S7)$(id).style.transform=`translateX(${(1-out(p))*-120}px)`});
+
+  // --- S7 offre
+  if(S==='S7'){const l=t-T.S7;camera.position.set(0,0,7);camera.lookAt(0,0,0);}
+  {const l=t-T.S7,on=t>=T.S7;
+   txt('t7',t,T.S7+.15,99);
+   show('p7',on?out(seg(l,.6,1)):0,(1-out(seg(l,.6,1)))*30);$('strike').style.width=(out(seg(l,1,1.3))*112)+'%';
+   const cp=seg(l,1.2,1.5),pulse=1+.05*Math.max(0,Math.sin((l-1.6)*Math.PI*2.4))*(l>1.6);
+   show('cta',on?cl(cp*2):0,(1-out(cp))*50,on?(.75+.25*back(cp))*pulse:1);
+   show('url',on?seg(l,1.4,1.7):0);show('legal',on?seg(l,1.6,2):0)}
+
+  if(in3d)composer.render();
+};
+await document.fonts.ready;
+window.render(0);
+window.READY=true;
+</script>
+</body></html>

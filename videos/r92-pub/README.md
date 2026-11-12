@@ -17,3 +17,8 @@ Accroche « résultat d'abord » → avant → gummies → après → avant/apr�
 Les rushs (`rush/avant.mov`, `rush/apres.mov`, `rush/gummies.mp4`) ne sont pas versionnés (visages de personnes réelles).
 1. Monter `base.mp4` à partir des rushs (commande ffmpeg dans l'historique de la session).
 2. `node comp.js reel.html base.mp4 ../R92_reel_ads_v2.mp4` ajoute les textes animés.
+
+## Vidéo futuriste 3D v3 (explicative, ~33 s)
+Rendu Three.js (gummies 3D, fibre de kératine, actifs en orbite, HUD) + rush « gummies » entre 24,5 s et 27 s.
+1. `base3d.mp4` = noir + `rush/gummies.mp4` (3,2 s → fin) placé à 24,5 s.
+2. `node comp3d.js futur.html base3d.mp4 ../R92_futuriste_3D_v3.mp4` (sert le dossier en HTTP local, WebGL logiciel).

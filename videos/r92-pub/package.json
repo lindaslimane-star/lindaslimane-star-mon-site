@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "@fontsource/oswald": "^5.3.0",
-    "@fontsource/playfair-display": "^5.3.0"
+    "@fontsource/playfair-display": "^5.3.0",
+    "three": "^0.170.0"
   }
 }
