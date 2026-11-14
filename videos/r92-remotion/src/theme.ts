@@ -22,7 +22,7 @@ export const INTRO_FRAMES = 15; // 0,5 s
  */
 export const SAFE = { top: 200, bottom: 1590, side: 96, buttonsX: 895, buttonsTop: 1130, buttonsBottom: 1650 } as const;
 
-export type LayoutName = "classique" | "vedette";
+export type LayoutName = "classique" | "vedette" | "duo";
 
 /** Grille (px) de la composition 1080×1920, entièrement dans la zone sûre. */
 const makeLayout = (o: { pairVideoHeight: number; mainHeight: number; messageHeight: number; line1: number; line2: number; gapV: number }) => {
@@ -44,8 +44,24 @@ const makeLayout = (o: { pairVideoHeight: number; mainHeight: number; messageHei
   const footerTop = messageTop + messageHeight + 8;
   return {
     side, gap, titleTop, titleHeight, pairTop, pairWidth, labelHeight,
-    pairVideoHeight, pairHeight, mainTop, mainWidth, mainHeight,
+    pairVideoHeight, pairHeight, mainTop, mainLeft: side, mainWidth, mainHeight,
     messageTop, messageHeight, messageMaxWidth, footerTop, line1: o.line1, line2: o.line2,
+    /** Si défini : encadré message placé à côté de la vidéo gummies (au lieu de dessous, centré). */
+    messageBox: undefined as undefined | { left: number; width: number },
+  };
+};
+
+/** Avant/après en vedette + petite vidéo gummies VERTICALE à gauche, message à droite (hors boutons Instagram). */
+const makeDuo = () => {
+  const base = makeLayout({ pairVideoHeight: 798, mainHeight: 360, messageHeight: 360, line1: 62, line2: 40, gapV: 16 });
+  const mainWidth = 288; // 4:5 — visage et pot visibles ensemble
+  const messageLeft = base.side + mainWidth + base.gap;
+  return {
+    ...base,
+    mainWidth,
+    messageTop: base.mainTop,
+    footerTop: base.mainTop + base.mainHeight + 10,
+    messageBox: { left: messageLeft, width: SAFE.buttonsX - messageLeft },
   };
 };
 
@@ -54,5 +70,7 @@ export const LAYOUTS = {
   classique: makeLayout({ pairVideoHeight: 640, mainHeight: 400, messageHeight: 92, line1: 44, line2: 30, gapV: 18 }),
   /** Avant/après en vedette 435×774 (≈ 9:16, image entière), bandeau gummies fin 888×280 */
   vedette: makeLayout({ pairVideoHeight: 774, mainHeight: 280, messageHeight: 84, line1: 40, line2: 28, gapV: 16 }),
-} as const;
-export type Layout = (typeof LAYOUTS)[LayoutName];
+  /** Avant/après 435×798, vidéo gummies verticale 288×360 + message à côté */
+  duo: makeDuo(),
+};
+export type Layout = ReturnType<typeof makeLayout>;

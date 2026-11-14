@@ -11,7 +11,7 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 OUT=${OUT:-public/videos}            # ex. OUT=public/videos/1an pour la pub « 1 an »
-APRES_NAME=${APRES_NAME:-$([[ $OUT == */1an ]] && echo apres.mp4 || echo apres-6-mois.mp4)}
+APRES_NAME=${APRES_NAME:-$([[ $OUT == public/videos || $OUT == public/videos/ ]] && echo apres-6-mois.mp4 || echo apres.mp4)}
 mkdir -p "$OUT"
 [[ $# -ge 3 ]] || { echo "Usage : $0 AVANT APRES GUMMIES_1 [GUMMIES_2 ...]"; exit 1; }
 AVANT=$1; APRES=$2; shift 2

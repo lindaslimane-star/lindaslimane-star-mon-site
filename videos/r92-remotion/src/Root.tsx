@@ -7,6 +7,7 @@ import { resolveSrc } from "./resolve-src";
 import { FPS, HEIGHT, WIDTH } from "./theme";
 import saved3Mois from "../ad-props.json";
 import saved1An from "../ad-props-1an.json";
+import saved1AnV2 from "../ad-props-1an-v2.json";
 
 const withDuration = async (slot: VideoSlot): Promise<VideoSlot> => {
   try {
@@ -44,10 +45,11 @@ const Variant: React.FC<{ id: string; saved: unknown }> = ({ id, saved }) => (
   />
 );
 
-/** R92Cure = pub « 3 mois » (ad-props.json) ; R92Cure1An = pub « 1 an » (ad-props-1an.json). */
+/** R92Cure = pub « 3 mois » (ad-props.json) ; R92Cure1An = pub « 1 an » (ad-props-1an.json) ; R92Cure1AnV2 = 2e pub « 1 an » (ad-props-1an-v2.json). */
 export const RemotionRoot: React.FC = () => (
   <>
     <Variant id="R92Cure" saved={saved3Mois} />
     <Variant id="R92Cure1An" saved={saved1An} />
+    <Variant id="R92Cure1AnV2" saved={saved1AnV2} />
   </>
 );

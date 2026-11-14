@@ -6,9 +6,11 @@ Deux pubs partagent le même code :
 |---|---|---|---|---|---|
 | Cure 3 mois | `ad-props.json` | `public/videos/` | `R92Cure` | `npm run render` → `out/R92_cure_3_mois.mp4` | classique |
 | Cure 1 an | `ad-props-1an.json` | `public/videos/1an/` (`avant.mp4`, `apres.mp4`, `gummies.mp4`) | `R92Cure1An` | `npm run render:1an` → `out/R92_cure_1_an.mp4` | vedette |
+| Cure 1 an (v2) | `ad-props-1an-v2.json` | `public/videos/1an-v2/` | `R92Cure1AnV2` | `npm run render:1an-v2` → `out/R92_cure_1_an_v2.mp4` | duo |
 
 Mises en page (`layout`) : **classique** = avant/après 435×640 + gummies 888×400 ;
-**vedette** = avant/après 435×774 (≈ 9:16, image entière) + bandeau gummies fin 888×280.
+**vedette** = avant/après 435×774 (≈ 9:16, image entière) + bandeau gummies fin 888×280 ;
+**duo** = avant/après 435×798 + petite vidéo gummies verticale 288×360 à gauche, message à droite (pour un clip gummies vertical).
 Dans l'éditeur : boutons « Cure 3 mois / Cure 1 an » en haut, et menu « Mise en page ».
 
 Préparer les vidéos de la pub 1 an (un seul clip gummies → gardé dans son format d'origine) :

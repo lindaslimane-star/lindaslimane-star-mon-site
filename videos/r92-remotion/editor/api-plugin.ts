@@ -17,6 +17,10 @@ const VARIANTS: Record<string, { props: string; dir: string; files: Record<strin
     props: "ad-props-1an.json", dir: "1an", composition: "R92Cure1An", output: "R92_cure_1_an.mp4",
     files: { before: "avant.mp4", after: "apres.mp4", gummies: "gummies.mp4" },
   },
+  "1an-v2": {
+    props: "ad-props-1an-v2.json", dir: "1an-v2", composition: "R92Cure1AnV2", output: "R92_cure_1_an_v2.mp4",
+    files: { before: "avant.mp4", after: "apres.mp4", gummies: "gummies.mp4" },
+  },
 };
 const variantOf = (url: URL) => VARIANTS[url.searchParams.get("variant") ?? "3mois"] ?? VARIANTS["3mois"];
 

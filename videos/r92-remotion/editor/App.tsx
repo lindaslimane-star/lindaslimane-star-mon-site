@@ -5,12 +5,14 @@ import { adSchema, defaultProps, type AdProps, type Crop, type VideoSlot } from 
 import { FPS, HEIGHT, WIDTH } from "../src/theme";
 
 type SlotKey = "before" | "after" | "gummies";
-const VARIANT = new URLSearchParams(location.search).get("variant") === "1an" ? "1an" : "3mois";
+const VARIANTS = { "3mois": "Cure 3 mois", "1an": "Cure 1 an", "1an-v2": "Cure 1 an (v2)" } as const;
+const requested = new URLSearchParams(location.search).get("variant") ?? "3mois";
+const VARIANT = (requested in VARIANTS ? requested : "3mois") as keyof typeof VARIANTS;
 const Q = `variant=${VARIANT}`;
-const DIR = VARIANT === "1an" ? "public/videos/1an/" : "public/videos/";
+const DIR = VARIANT === "3mois" ? "public/videos/" : `public/videos/${VARIANT}/`;
 const SLOT_INFO: Record<SlotKey, { title: string; file: string }> = {
   before: { title: "Vidéo 1 — Avant la cure (haut gauche)", file: DIR + "avant.mp4" },
-  after: { title: "Vidéo 2 — Après (haut droite)", file: DIR + (VARIANT === "1an" ? "apres.mp4" : "apres-6-mois.mp4") },
+  after: { title: "Vidéo 2 — Après (haut droite)", file: DIR + (VARIANT === "3mois" ? "apres-6-mois.mp4" : "apres.mp4") },
   gummies: { title: "Vidéo 3 — Prise des gummies (bas)", file: DIR + "gummies.mp4" },
 };
 type RenderState = { status: string; progress: number; file?: string; error?: string };
@@ -126,8 +128,9 @@ export const App: React.FC = () => {
       <aside className="panel">
         <h1>Pub R92 — 3 vidéos simultanées</h1>
         <nav className="variants">
-          <a href="?variant=3mois" className={VARIANT === "3mois" ? "on" : ""}>Cure 3 mois</a>
-          <a href="?variant=1an" className={VARIANT === "1an" ? "on" : ""}>Cure 1 an</a>
+          {Object.entries(VARIANTS).map(([id, name]) => (
+            <a key={id} href={`?variant=${id}`} className={VARIANT === id ? "on" : ""}>{name}</a>
+          ))}
         </nav>
 
         <section>
@@ -158,6 +161,7 @@ export const App: React.FC = () => {
             <select value={props.layout ?? "classique"} onChange={(e) => setProps({ ...props, layout: e.target.value as AdProps["layout"] })}>
               <option value="classique">Classique (gummies 888×400)</option>
               <option value="vedette">Avant/après en vedette (gummies 888×280)</option>
+              <option value="duo">Avant/après en vedette + gummies vertical à côté du message</option>
             </select></label>
         </section>
 

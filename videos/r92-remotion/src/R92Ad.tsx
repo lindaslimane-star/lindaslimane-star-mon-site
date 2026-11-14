@@ -5,7 +5,7 @@ import { BrandBox } from "./components/BrandBox";
 import { Frame } from "./components/Frame";
 import { SyncedVideo } from "./components/SyncedVideo";
 import type { AdProps } from "./schema";
-import { COLORS, FONT_DISPLAY, FONT_TEXT, HEIGHT, INTRO_FRAMES, LAYOUTS, SAFE, WIDTH } from "./theme";
+import { COLORS, FONT_DISPLAY, FONT_TEXT, HEIGHT, INTRO_FRAMES, LAYOUTS, SAFE, WIDTH, type Layout } from "./theme";
 
 /** Repères des zones masquées par l'interface Instagram (aperçu de l'éditeur uniquement, jamais exporté). */
 const SafeZoneGuide: React.FC = () => {
@@ -19,6 +19,19 @@ const SafeZoneGuide: React.FC = () => {
       <div style={{ ...mask, left: SAFE.buttonsX, right: SAFE.side, top: SAFE.buttonsTop, height: SAFE.bottom - SAFE.buttonsTop }} />
     </AbsoluteFill>
   );
+};
+
+/** Coupe un texte en deux lignes équilibrées (« 2 GUMMIES » / « PAR JOUR »). */
+const twoLines = (text: string): React.ReactNode => {
+  const words = text.split(" ");
+  if (words.length < 2) return text;
+  let best = 1;
+  for (let i = 1; i < words.length; i++) {
+    const a = words.slice(0, i).join(" ").length, b = words.slice(i).join(" ").length;
+    const ba = words.slice(0, best).join(" ").length, bb = words.slice(best).join(" ").length;
+    if (Math.abs(a - b) <= Math.abs(ba - bb)) best = i;
+  }
+  return <>{words.slice(0, best).join(" ")}<br />{words.slice(best).join(" ")}</>;
 };
 
 /** Fondu d'opacité uniquement (pas de déplacement, pas de zoom). */
@@ -66,7 +79,7 @@ const PairLabel: React.FC<{ text: string; height: number; highlight?: boolean }>
 
 export const R92Ad: React.FC<AdProps & { showSafeZone?: boolean }> = (props) => {
   const frame = useCurrentFrame();
-  const L = LAYOUTS[props.layout ?? "classique"];
+  const L: Layout = LAYOUTS[props.layout ?? "classique"];
   const titleOpacity = useFade(0, INTRO_FRAMES);
   const line1 = useFade(6, INTRO_FRAMES + 6);
   const line2 = useFade(12, INTRO_FRAMES + 12);
@@ -142,7 +155,7 @@ export const R92Ad: React.FC<AdProps & { showSafeZone?: boolean }> = (props) => 
       </Frame>
 
       {/* VIDÉO 3 — PRISE DES GUMMIES (grande, horizontale) */}
-      <Frame left={L.side} top={L.mainTop} width={L.mainWidth} height={L.mainHeight} phase={Math.PI}>
+      <Frame left={L.mainLeft} top={L.mainTop} width={L.mainWidth} height={L.mainHeight} phase={Math.PI}>
         <SyncedVideo slot={props.gummies} />
         {props.gummies.label ? (
           <div
@@ -171,8 +184,7 @@ export const R92Ad: React.FC<AdProps & { showSafeZone?: boolean }> = (props) => 
       <div
         style={{
           position: "absolute",
-          left: 0,
-          right: 0,
+          ...(L.messageBox ? { left: L.messageBox.left, width: L.messageBox.width } : { left: 0, right: 0 }),
           top: L.messageTop,
           height: L.messageHeight,
           display: "flex",
@@ -181,10 +193,9 @@ export const R92Ad: React.FC<AdProps & { showSafeZone?: boolean }> = (props) => 
       >
         <div
           style={{
-            minWidth: 600,
-            maxWidth: L.messageMaxWidth,
+            ...(L.messageBox ? { width: "100%", padding: "0 20px" } : { minWidth: 600, maxWidth: L.messageMaxWidth }),
             height: "100%",
-            padding: "0 44px",
+            ...(L.messageBox ? {} : { padding: "0 44px" }),
             borderRadius: 22,
             border: `2px solid rgba(59,130,246,${0.4 + titleOpacity * 0.6})`,
             background: `linear-gradient(180deg, rgba(13,42,99,0.9) 0%, rgba(6,26,64,0.92) 100%)`,
@@ -193,7 +204,7 @@ export const R92Ad: React.FC<AdProps & { showSafeZone?: boolean }> = (props) => 
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
-            gap: 2,
+            gap: L.messageBox ? 14 : 2,
           }}
         >
           <div
@@ -205,11 +216,15 @@ export const R92Ad: React.FC<AdProps & { showSafeZone?: boolean }> = (props) => 
               lineHeight: 1.05,
               letterSpacing: 1.5,
               color: COLORS.white,
-              whiteSpace: "nowrap",
+              whiteSpace: L.messageBox ? "normal" : "nowrap",
+              textAlign: "center",
             }}
           >
-            {props.messageLine1}
+            {L.messageBox ? twoLines(props.messageLine1) : props.messageLine1}
           </div>
+          {L.messageBox ? (
+            <div style={{ width: 90 * line2, height: 3, borderRadius: 2, background: COLORS.electric, boxShadow: "0 0 10px rgba(59,130,246,0.7)" }} />
+          ) : null}
           <div
             style={{
               opacity: line2,
