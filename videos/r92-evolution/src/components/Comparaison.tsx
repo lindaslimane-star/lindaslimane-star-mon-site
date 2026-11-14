@@ -1,5 +1,5 @@
 import React from "react";
-import { Easing, interpolate, spring, useCurrentFrame, useVideoConfig } from "remotion";
+import { Easing, interpolate, Sequence, spring, useCurrentFrame, useVideoConfig } from "remotion";
 import { COULEURS, POLICE } from "../theme";
 import { vitesseLecture, type PeriodeResolue, type Timeline } from "../timing";
 import type { EvolutionProps } from "../schema";
@@ -45,7 +45,9 @@ export const Comparaison: React.FC<{
       }}
     >
       <div style={{ width: "100%", height: "100%", transform: `scale(${zoom})` }}>
-        <Media periode={p} vitesse={vitesseLecture(props, p, (tl.total - tl.compFrom) / fps)} />
+        <Sequence from={debut} layout="none">
+          <Media periode={p} vitesse={vitesseLecture(props, p, (tl.total - tl.compFrom) / fps)} />
+        </Sequence>
       </div>
       <div
         style={{

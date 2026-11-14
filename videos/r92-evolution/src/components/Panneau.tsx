@@ -1,5 +1,5 @@
 import React from "react";
-import { Easing, interpolate, spring, useCurrentFrame, useVideoConfig } from "remotion";
+import { Easing, interpolate, Sequence, spring, useCurrentFrame, useVideoConfig } from "remotion";
 import { COULEURS, LAYOUT } from "../theme";
 import { vitesseLecture, type Timeline, type Segment } from "../timing";
 import type { EvolutionProps } from "../schema";
@@ -161,7 +161,10 @@ const Couche: React.FC<{ s: Segment; tl: Timeline; props: EvolutionProps }> = ({
       }}
     >
       <div style={{ width: "100%", height: "100%", transform: `scale(${echelle})` }}>
-        <Media periode={s.periode} vitesse={vitesse} />
+        {/* La vidéo démarre à sa propre seconde 0 quand la période apparaît */}
+        <Sequence from={debut} layout="none">
+          <Media periode={s.periode} vitesse={vitesse} />
+        </Sequence>
       </div>
     </div>
   );
