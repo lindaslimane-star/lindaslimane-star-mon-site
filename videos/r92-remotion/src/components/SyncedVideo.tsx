@@ -15,12 +15,14 @@ export const SyncedVideo: React.FC<{ slot: VideoSlot }> = ({ slot }) => {
   const { fps, durationInFrames } = useVideoConfig();
   const { crop } = slot;
   const src = resolveSrc(slot.src);
+  const rate = slot.playbackRate ?? 1;
 
   const video = (
     <OffthreadVideo
       src={src}
       muted={slot.volume <= 0}
       volume={slot.volume}
+      playbackRate={rate}
       pauseWhenBuffering
       style={{
         width: "100%",
@@ -34,7 +36,8 @@ export const SyncedVideo: React.FC<{ slot: VideoSlot }> = ({ slot }) => {
     />
   );
 
-  const loopFrames = slot.sourceDuration ? Math.floor(slot.sourceDuration * fps) : 0;
+  // Au ralenti, une boucle dure plus longtemps sur la timeline (durée source ÷ vitesse).
+  const loopFrames = slot.sourceDuration ? Math.floor((slot.sourceDuration * fps) / rate) : 0;
   const needsLoop = loopFrames > 0 && loopFrames < durationInFrames;
 
   return (

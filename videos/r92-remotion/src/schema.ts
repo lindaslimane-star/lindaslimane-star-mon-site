@@ -16,6 +16,8 @@ export const videoSlotSchema = z.object({
   label: z.string(),
   crop: cropSchema,
   volume: z.number().min(0).max(1).step(0.05),
+  /** Vitesse de lecture : 1 = normale, 0,5 = ralenti ×2 (aucune image ajoutée ni inventée) */
+  playbackRate: z.number().min(0.25).max(2).step(0.05).optional(),
   /** Durée de la source en secondes — calculée automatiquement (sert à la boucle) */
   sourceDuration: z.number().optional(),
 });

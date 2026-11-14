@@ -200,6 +200,7 @@ export const App: React.FC = () => {
               <Slider label="Zoom" value={s.crop.zoom} min={1} max={2.5} step={0.01} unit="×" onChange={(v) => setCrop(k, { zoom: v })} />
               <Slider label="Horizontal" value={s.crop.x} min={0} max={100} step={1} unit=" %" onChange={(v) => setCrop(k, { x: v })} />
               <Slider label="Vertical" value={s.crop.y} min={0} max={100} step={1} unit=" %" onChange={(v) => setCrop(k, { y: v })} />
+              <Slider label="Vitesse" value={s.playbackRate ?? 1} min={0.25} max={1.5} step={0.05} unit="×" onChange={(v) => setSlot(k, { playbackRate: v })} />
               <Slider label="Son" value={s.volume} min={0} max={1} step={0.05} onChange={(v) => setSlot(k, { volume: v })} />
             </section>
           );
