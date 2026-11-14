@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
-# Prépare les vidéos réelles fournies (smartphone, verticales) pour la pub.
+# Prépare les vidéos réelles fournies pour la pub.
 # Usage : bash scripts/prepare-sources.sh AVANT.mov APRES.mov GUMMIES_1.mov [GUMMIES_2.mov ...]
 #
 # Aucune retouche du sujet : pas de filtre couleur, pas de lissage, pas de modification des cheveux.
-#  - avant / après : simple changement de conteneur MOV → MP4 (flux vidéo copié à l'identique).
-#    Le recadrage se règle ensuite dans l'éditeur (point focal, zoom ≥ 1).
-#  - gummies : les clips sont mis bout à bout dans un plan horizontal 1080×726 (même ratio que le cadre du bas).
-#    Le 1er clip (plan large : visage + pot) est affiché en entier en hauteur utile, centré, sur un fond
-#    formé du même plan flouté et assombri. Les clips suivants (gros plans) sont recadrés autour du visage et du geste.
+#  - avant / après : simple changement de conteneur MOV → MP4 (flux copié à l'identique) si H.264,
+#    sinon conversion H.264 haute qualité. Le recadrage se règle ensuite dans l'éditeur.
+#  - gummies : les clips sont mis bout à bout dans un plan horizontal.
+#      · clip horizontal → mis à l'échelle (recadrage de quelques pixels au plus pour égaliser les tailles) ;
+#      · clip vertical   → affiché en entier (7 % → 86 % de la hauteur) sur un fond flouté du même plan.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 OUT=public/videos
@@ -15,21 +15,33 @@ mkdir -p "$OUT"
 [[ $# -ge 3 ]] || { echo "Usage : $0 AVANT APRES GUMMIES_1 [GUMMIES_2 ...]"; exit 1; }
 AVANT=$1; APRES=$2; shift 2
 
-ffmpeg -loglevel error -y -i "$AVANT" -map 0:v:0 -map 0:a? -c copy -movflags +faststart "$OUT/avant.mp4"
-ffmpeg -loglevel error -y -i "$APRES" -map 0:v:0 -map 0:a? -c copy -movflags +faststart "$OUT/apres-6-mois.mp4"
-echo "✓ avant.mp4, apres-6-mois.mp4 (flux d'origine copiés)"
+copy_or_h264() { # entrée sortie
+  local codec; codec=$(ffprobe -v error -select_streams v:0 -show_entries stream=codec_name -of csv=p=0 "$1")
+  if [[ $codec == h264 ]]; then
+    ffmpeg -loglevel error -y -i "$1" -map 0:v:0 -map 0:a? -c copy -movflags +faststart "$2"
+  else
+    ffmpeg -loglevel error -y -i "$1" -map 0:v:0 -map 0:a? -c:v libx264 -crf 16 -preset slow -pix_fmt yuv420p \
+      -c:a aac -b:a 160k -movflags +faststart "$2"
+  fi
+}
+copy_or_h264 "$AVANT" "$OUT/avant.mp4"
+copy_or_h264 "$APRES" "$OUT/apres-6-mois.mp4"
+echo "✓ avant.mp4, apres-6-mois.mp4"
 
-W=1080; H=726
-# Plan large : fenêtre utile de 7 % à 86 % de la hauteur (visage → pot), entière, centrée sur fond flouté.
-WIDE="split[a][b];[a]crop=iw:ih*${H}/${W}*iw/ih*${W}/iw:0:ih*0.30,scale=${W}:${H},boxblur=40:2,eq=brightness=-0.22[bg];\
-[b]crop=iw:ih*0.79:0:ih*0.07,scale=-2:${H}[fg];[bg][fg]overlay=(W-w)/2:0"
-# Gros plan : bande horizontale de 23 % à ~61 % de la hauteur (yeux → bouche + gummy + doigts).
-CLOSE="crop=iw:iw*${H}/${W}:0:ih*0.23,scale=${W}:${H}"
+# Taille du plan gummies : d'après le 1er clip (horizontal → 1920×1004, vertical → 1080×726)
+IFS=x read -r W0 H0 < <(ffprobe -v error -select_streams v:0 -show_entries stream=width,height -of csv=s=x:p=0 "$1")
+if (( W0 > H0 )); then W=1920; H=1004; else W=1080; H=726; fi
 
 inputs=(); filters=""; concat=""; i=0
 for f in "$@"; do
   inputs+=(-i "$f")
-  if [[ $i -eq 0 ]]; then vf=$WIDE; else vf=$CLOSE; fi
+  IFS=x read -r w h < <(ffprobe -v error -select_streams v:0 -show_entries stream=width,height -of csv=s=x:p=0 "$f")
+  if (( w > h )); then
+    vf="scale=${W}:${H}:force_original_aspect_ratio=increase,crop=${W}:${H}"
+  else
+    vf="split[a$i][b$i];[a$i]scale=${W}:${H}:force_original_aspect_ratio=increase,crop=${W}:${H},boxblur=40:2,eq=brightness=-0.22[bg$i];\
+[b$i]crop=iw:ih*0.79:0:ih*0.07,scale=-2:${H}[fg$i];[bg$i][fg$i]overlay=(W-w)/2:0"
+  fi
   filters+="[$i:v]${vf},fps=30,setsar=1,format=yuv420p[v$i];[$i:a]aresample=48000,aformat=channel_layouts=stereo[a$i];"
   concat+="[v$i][a$i]"; i=$((i+1))
 done

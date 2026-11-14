@@ -93,7 +93,7 @@ export const R92Ad: React.FC<AdProps> = (props) => {
           opacity: titleOpacity,
           fontFamily: FONT_DISPLAY,
           fontWeight: 700,
-          fontSize: 94,
+          fontSize: 90,
           letterSpacing: 1,
           color: COLORS.white,
           whiteSpace: "nowrap",
@@ -101,7 +101,7 @@ export const R92Ad: React.FC<AdProps> = (props) => {
         }}
       >
         <span>{props.titleText}</span>
-        {props.titleBrand ? <BrandBox text={props.titleBrand} fontSize={94} /> : null}
+        {props.titleBrand ? <BrandBox text={props.titleBrand} fontSize={90} /> : null}
       </div>
 
       {/* VIDÉO 1 — AVANT (haut gauche) */}
@@ -185,7 +185,7 @@ export const R92Ad: React.FC<AdProps> = (props) => {
               opacity: line1,
               fontFamily: FONT_DISPLAY,
               fontWeight: 700,
-              fontSize: 58,
+              fontSize: 52,
               lineHeight: 1.05,
               letterSpacing: 1.5,
               color: COLORS.white,
@@ -199,7 +199,7 @@ export const R92Ad: React.FC<AdProps> = (props) => {
               opacity: line2,
               fontFamily: FONT_DISPLAY,
               fontWeight: 500,
-              fontSize: 40,
+              fontSize: 36,
               lineHeight: 1.1,
               letterSpacing: 6,
               color: COLORS.electric,

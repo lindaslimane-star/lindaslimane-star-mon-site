@@ -17,19 +17,19 @@ export const INTRO_FRAMES = 15; // 0,5 s
 export const LAYOUT = (() => {
   const side = 36;
   const gap = 24;
-  const titleTop = 50;
-  const titleHeight = 140;
-  const pairTop = 212;
+  const titleTop = 44;
+  const titleHeight = 136;
+  const pairTop = 196;
   const pairWidth = (WIDTH - side * 2 - gap) / 2; // 492 px chacune — strictement identiques
   const labelHeight = 72;
-  const pairVideoHeight = 720;
+  const pairVideoHeight = 960; // la vedette : ≈ 9:16, cheveux visibles de la racine aux pointes
   const pairHeight = labelHeight + pairVideoHeight;
-  const mainTop = pairTop + pairHeight + 26;
+  const mainTop = pairTop + pairHeight + 22;
   const mainWidth = WIDTH - side * 2; // 1008 px
-  const mainHeight = 680; // ratio ≈ 1,49 (même ratio que gummies.mp4 préparé en 1080×726)
-  const messageTop = mainTop + mainHeight + 22;
-  const messageHeight = 132;
-  const footerTop = messageTop + messageHeight + 18;
+  const mainHeight = 470; // bandeau secondaire, plus discret que l'avant/après
+  const messageTop = mainTop + mainHeight + 18;
+  const messageHeight = 112;
+  const footerTop = messageTop + messageHeight + 12;
   return {
     side, gap, titleTop, titleHeight, pairTop, pairWidth, labelHeight,
     pairVideoHeight, pairHeight, mainTop, mainWidth, mainHeight,
