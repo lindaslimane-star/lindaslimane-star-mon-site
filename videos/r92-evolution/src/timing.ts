@@ -11,6 +11,8 @@ export type Segment = {
 
 export type Timeline = {
   segments: Segment[];
+  /** Segments qui sont des étapes de la frise (mois). */
+  frise: Segment[];
   intro: number;
   trans: number;
   finPeriodes: number;
@@ -50,11 +52,12 @@ export const construireTimeline = (
   });
   const finPeriodes = t;
 
-  const premiere = segments[0]?.periode;
-  const derniere = segments[segments.length - 1]?.periode;
+  const frise = segments.filter((s) => s.periode.dansLaFrise);
+  const premiere = frise[0]?.periode;
+  const derniere = frise[frise.length - 1]?.periode;
   const comparaisonPossible =
     props.comparaisonFinale.active &&
-    segments.length >= 2 &&
+    frise.length >= 2 &&
     (props.modeMaquette || (!premiere?.absente && !derniere?.absente));
 
   const compDur = comparaisonPossible
@@ -65,14 +68,26 @@ export const construireTimeline = (
     finPeriodes + (compDur > 0 ? compDur : Math.round(0.8 * fps)),
   );
 
-  return { segments, intro, trans, finPeriodes, compFrom: finPeriodes, compDur, total };
+  return { segments, frise, intro, trans, finPeriodes, compFrom: finPeriodes, compDur, total };
 };
 
-/** Index de la période active à la frame f. */
+/** Index de l'étape active de la frise à la frame f (-1 = aucune encore). */
 export const indexActif = (tl: Timeline, f: number) => {
-  let idx = 0;
-  tl.segments.forEach((s, i) => {
+  let idx = -1;
+  tl.frise.forEach((s, i) => {
     if (f >= s.from) idx = i;
   });
   return idx;
+};
+
+/** Vitesse de lecture pour qu'une vidéo trop courte couvre tout son créneau (léger ralenti, jamais < 0,6). */
+export const vitesseLecture = (
+  props: { dureesFichiers?: Record<string, number> },
+  periode: Periode,
+  secondesNecessaires: number,
+) => {
+  const total = props.dureesFichiers?.[periode.fichier];
+  if (!total || !estVideo(periode.fichier)) return 1;
+  const dispo = total - periode.debutVideo - 0.05;
+  return Math.max(0.6, Math.min(1, dispo / secondesNecessaires));
 };

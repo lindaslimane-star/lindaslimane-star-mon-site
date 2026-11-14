@@ -1,7 +1,7 @@
 import React from "react";
 import { Easing, interpolate, spring, useCurrentFrame, useVideoConfig } from "remotion";
 import { COULEURS, LAYOUT } from "../theme";
-import type { Timeline, Segment } from "../timing";
+import { vitesseLecture, type Timeline, type Segment } from "../timing";
 import type { EvolutionProps } from "../schema";
 import { Media } from "./Media";
 import { Etiquette } from "./Etiquette";
@@ -66,7 +66,7 @@ export const Panneau: React.FC<{ tl: Timeline; props: EvolutionProps }> = ({ tl,
         }}
       >
         {tl.segments.map((s) => (
-          <Couche key={s.index} s={s} tl={tl} zoom={props.zoom} />
+          <Couche key={s.index} s={s} tl={tl} props={props} />
         ))}
 
         {/* léger dégradé en haut pour la lisibilité de l'encadré */}
@@ -85,11 +85,12 @@ export const Panneau: React.FC<{ tl: Timeline; props: EvolutionProps }> = ({ tl,
           <EtiquettePeriode key={`e${s.index}`} s={s} tl={tl} />
         ))}
 
-        {tl.compDur > 0 && tl.segments.length >= 2 ? (
+        {tl.compDur > 0 && tl.frise.length >= 2 ? (
           <Comparaison
             tl={tl}
-            avant={tl.segments[0].periode}
-            apres={tl.segments[tl.segments.length - 1].periode}
+            props={props}
+            avant={tl.frise[0].periode}
+            apres={tl.frise[tl.frise.length - 1].periode}
             slogan={props.comparaisonFinale.slogan}
             marque={props.marque}
           />
@@ -126,14 +127,17 @@ export const Panneau: React.FC<{ tl: Timeline; props: EvolutionProps }> = ({ tl,
 };
 
 /** Une période : fondu enchaîné + zoom cinématique lent. */
-const Couche: React.FC<{ s: Segment; tl: Timeline; zoom: number }> = ({ s, tl, zoom }) => {
+const Couche: React.FC<{ s: Segment; tl: Timeline; props: EvolutionProps }> = ({ s, tl, props }) => {
   const f = useCurrentFrame();
+  const { fps } = useVideoConfig();
+  const zoom = props.zoom;
   const premiere = s.index === 0;
   const debut = premiere ? 0 : s.from;
   const finVisible = s.from + s.dur + tl.trans;
   const estDerniere = s.index === tl.segments.length - 1;
   const finAbsolue = estDerniere ? (tl.compDur > 0 ? tl.compFrom + tl.trans + 2 : tl.total) : finVisible;
   if (f < debut || f > finAbsolue) return null;
+  const vitesse = vitesseLecture(props, s.periode, (finAbsolue - debut) / fps);
 
   const dureeFondu = premiere ? Math.max(tl.intro, 10) + 6 : tl.trans;
   const opacite = interpolate(f, [debut, debut + dureeFondu], [0, 1], {
@@ -157,7 +161,7 @@ const Couche: React.FC<{ s: Segment; tl: Timeline; zoom: number }> = ({ s, tl, z
       }}
     >
       <div style={{ width: "100%", height: "100%", transform: `scale(${echelle})` }}>
-        <Media periode={s.periode} />
+        <Media periode={s.periode} vitesse={vitesse} />
       </div>
     </div>
   );

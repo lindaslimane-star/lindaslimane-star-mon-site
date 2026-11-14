@@ -10,7 +10,7 @@ const source = (fichier: string) =>
  * Affiche la photo / vidéo réelle telle quelle (aucun filtre, aucune retouche).
  * Seul le cadrage (object-position) et le zoom global du conteneur s'appliquent.
  */
-export const Media: React.FC<{ periode: PeriodeResolue }> = ({ periode }) => {
+export const Media: React.FC<{ periode: PeriodeResolue; vitesse?: number }> = ({ periode, vitesse = 1 }) => {
   const { fps } = useVideoConfig();
   if (periode.absente) return <EmplacementVide periode={periode} />;
 
@@ -26,6 +26,7 @@ export const Media: React.FC<{ periode: PeriodeResolue }> = ({ periode }) => {
       <OffthreadVideo
         src={source(periode.fichier)}
         muted
+        playbackRate={vitesse}
         startFrom={Math.round(periode.debutVideo * fps)}
         style={style}
       />

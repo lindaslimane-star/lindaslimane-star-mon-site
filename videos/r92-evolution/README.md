@@ -15,7 +15,8 @@ Déposez-les dans `public/evolution/` (JPG, PNG, WEBP, MP4, MOV, WEBM).
 Noms par défaut : `avant.jpg`, `mois-1.jpg` … `mois-6.jpg` (ou `.mp4`).
 
 Les médias sont affichés **tels quels** : aucun filtre, aucune retouche, aucune génération.
-Seuls le cadrage et un léger zoom lent du cadre sont appliqués.
+Seuls le cadrage et un léger zoom lent du cadre sont appliqués. Si une vidéo est plus courte
+que son créneau, elle est légèrement ralentie (jamais en dessous de 0,6×) au lieu de se figer.
 
 ## 2. Modifier textes, dates et durées
 Tout est dans **`src/config.ts`** (ou en direct dans le panneau *Props* du Studio) :
@@ -31,6 +32,7 @@ Tout est dans **`src/config.ts`** (ou en direct dans le panneau *Props* du Studi
 | `periodes[].duree` | durée de la période (s) |
 | `periodes[].cadrage` | position de l'image, ex. `"50% 35%"` pour remonter vers le cuir chevelu |
 | `periodes[].debutVideo` | pour une vidéo : seconde de départ |
+| `periodes[].dansLaFrise` | `true` = étape de la frise (mois) ; `false` = plan libre (ex. produit), hors frise et hors comparaison |
 | `transitionSecondes`, `zoom` | douceur des fondus, intensité du zoom cinématique |
 | `comparaisonFinale` | écran final avant / dernier mois côte à côte + slogan |
 | `mention` | petite mention en bas (vide = rien) |

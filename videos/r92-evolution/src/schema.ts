@@ -17,6 +17,8 @@ export const periodeSchema = z.object({
   debutVideo: z.number().min(0),
   /** Décocher pour masquer la période sans supprimer la ligne. */
   afficher: z.boolean(),
+  /** true = étape de la frise (mois). false = plan libre (ex. produit), hors frise et hors comparaison. */
+  dansLaFrise: z.boolean(),
 });
 
 export const evolutionSchema = z.object({
@@ -50,6 +52,8 @@ export const evolutionSchema = z.object({
   modeMaquette: z.boolean(),
   /** Rempli automatiquement : fichiers introuvables dans public/. Ne pas modifier. */
   fichiersManquants: z.array(z.string()).optional(),
+  /** Rempli automatiquement : durée (s) de chaque fichier vidéo. Ne pas modifier. */
+  dureesFichiers: z.record(z.string(), z.number()).optional(),
 });
 
 export type EvolutionProps = z.infer<typeof evolutionSchema>;

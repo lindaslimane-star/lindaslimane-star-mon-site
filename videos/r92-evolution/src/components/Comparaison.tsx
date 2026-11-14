@@ -1,7 +1,8 @@
 import React from "react";
 import { Easing, interpolate, spring, useCurrentFrame, useVideoConfig } from "remotion";
 import { COULEURS, POLICE } from "../theme";
-import type { PeriodeResolue, Timeline } from "../timing";
+import { vitesseLecture, type PeriodeResolue, type Timeline } from "../timing";
+import type { EvolutionProps } from "../schema";
 import { Media } from "./Media";
 import { Etiquette } from "./Etiquette";
 
@@ -10,11 +11,12 @@ const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
 /** Fin : première et dernière périodes documentées côte à côte. */
 export const Comparaison: React.FC<{
   tl: Timeline;
+  props: EvolutionProps;
   avant: PeriodeResolue;
   apres: PeriodeResolue;
   slogan: string;
   marque: string;
-}> = ({ tl, avant, apres, slogan, marque }) => {
+}> = ({ tl, props, avant, apres, slogan, marque }) => {
   const f = useCurrentFrame();
   const { fps } = useVideoConfig();
   const debut = tl.compFrom;
@@ -43,7 +45,7 @@ export const Comparaison: React.FC<{
       }}
     >
       <div style={{ width: "100%", height: "100%", transform: `scale(${zoom})` }}>
-        <Media periode={p} />
+        <Media periode={p} vitesse={vitesseLecture(props, p, (tl.total - tl.compFrom) / fps)} />
       </div>
       <div
         style={{

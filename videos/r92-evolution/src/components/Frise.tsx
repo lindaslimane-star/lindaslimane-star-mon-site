@@ -10,7 +10,7 @@ const LARGEUR = 880;
 export const Frise: React.FC<{ tl: Timeline }> = ({ tl }) => {
   const f = useCurrentFrame();
   const { fps } = useVideoConfig();
-  const n = tl.segments.length;
+  const n = tl.frise.length;
   if (n === 0) return null;
 
   const pas = n > 1 ? LARGEUR / (n - 1) : 0;
@@ -18,7 +18,7 @@ export const Frise: React.FC<{ tl: Timeline }> = ({ tl }) => {
 
   // position continue (0 … n-1) : glisse pendant chaque transition
   let position = 0;
-  tl.segments.forEach((s, i) => {
+  tl.frise.forEach((s, i) => {
     if (i === 0) return;
     position += interpolate(f, [s.from, s.from + tl.trans], [0, 1], {
       ...clamp,
@@ -62,7 +62,7 @@ export const Frise: React.FC<{ tl: Timeline }> = ({ tl }) => {
           position: "absolute",
           top: 26,
           left: 0,
-          width: n > 1 ? position * pas : 0,
+          width: n > 1 && actif >= 0 ? position * pas : 0,
           height: 5,
           borderRadius: 5,
           background: `linear-gradient(90deg, rgba(255,255,255,0.9), ${COULEURS.electrique})`,
@@ -70,7 +70,7 @@ export const Frise: React.FC<{ tl: Timeline }> = ({ tl }) => {
         }}
       />
 
-      {tl.segments.map((s, i) => {
+      {tl.frise.map((s, i) => {
         const x = x0 + i * pas;
         const estActif = i === actif;
         const passe = i < actif;

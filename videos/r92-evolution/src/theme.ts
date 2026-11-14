@@ -14,17 +14,17 @@ export const W = 1080;
 export const H = 1920;
 export const FPS = 30;
 
-/** Mise en page (pixels, sur 1080 × 1920) */
+/** Mise en page (pixels, sur 1080 × 1920) — cadre vidéo maximisé. */
 export const LAYOUT = {
-  titreTop: 176,
-  sousTitreTop: 318,
-  panneauX: 80,
-  panneauW: 920,
-  panneauTopAvecSousTitre: 438,
-  panneauTopSansSousTitre: 350,
-  panneauBas: 1424,
-  friseTop: 1500,
-  mentionTop: 1662,
+  titreTop: 92,
+  sousTitreTop: 204,
+  panneauX: 28,
+  panneauW: 1024,
+  panneauTopAvecSousTitre: 304,
+  panneauTopSansSousTitre: 204,
+  panneauBas: 1652,
+  friseTop: 1704,
+  mentionTop: 1840,
 };
 
 export const glow = (alpha: number, blur = 40) =>
