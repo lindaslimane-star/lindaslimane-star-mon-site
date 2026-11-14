@@ -8,7 +8,7 @@ export const Titre: React.FC<{ titre: string; marque: string }> = ({ titre, marq
   const { fps } = useVideoConfig();
   const mots = titre.split(" ");
 
-  const boite = spring({ frame: f + 2, fps, config: { damping: 18, stiffness: 120 } });
+  const boite = spring({ frame: f + 24, fps, config: { damping: 18, stiffness: 120 } });
   const pulse = 0.55 + 0.25 * Math.sin((f / fps) * 2.2);
   // reflet qui traverse l'encadré R92 toutes les ~5 s
   const cycle = (f + 40) % (fps * 5);
@@ -33,7 +33,7 @@ export const Titre: React.FC<{ titre: string; marque: string }> = ({ titre, marq
     >
       <div style={{ display: "flex", gap: 18 }}>
         {mots.map((mot, i) => {
-          const p = spring({ frame: f + 8 - i * 3, fps, config: { damping: 20, stiffness: 140 } });
+          const p = spring({ frame: f + 24 - i * 2, fps, config: { damping: 20, stiffness: 140 } });
           return (
             <div key={i} style={{ overflow: "hidden", paddingBottom: 4 }}>
               <div

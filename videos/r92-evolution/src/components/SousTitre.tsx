@@ -9,7 +9,7 @@ export const SousTitre: React.FC<{ texte: string; dureeSecondes: number }> = ({ 
   if (!texte || dureeSecondes <= 0) return null;
 
   const fin = Math.round(dureeSecondes * fps);
-  const entree = spring({ frame: f - 10, fps, config: { damping: 20, stiffness: 110 } });
+  const entree = spring({ frame: f + 14, fps, config: { damping: 20, stiffness: 110 } });
   const sortie = interpolate(f, [fin - 12, fin + 6], [0, 1], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",

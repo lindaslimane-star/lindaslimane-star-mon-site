@@ -19,6 +19,8 @@ export const periodeSchema = z.object({
   afficher: z.boolean(),
   /** true = étape de la frise (mois). false = plan libre (ex. produit), hors frise et hors comparaison. */
   dansLaFrise: z.boolean(),
+  /** Grand texte en bas de la vidéo (« \n » = retour à la ligne). Vide = rien. */
+  texteBas: z.string(),
 });
 
 export const evolutionSchema = z.object({
@@ -33,6 +35,11 @@ export const evolutionSchema = z.object({
   transitionSecondes: z.number().min(0.1).max(2),
   /** Intensité du zoom cinématique (0.07 = +7 % sur la durée d'une période). */
   zoom: z.number().min(0).max(0.3),
+  /** Accroche : premier et dernier mois côte à côte dès la 1re seconde. */
+  accroche: z.object({
+    active: z.boolean(),
+    duree: z.number().min(1).max(8),
+  }),
   periodes: z.array(periodeSchema),
   comparaisonFinale: z.object({
     active: z.boolean(),

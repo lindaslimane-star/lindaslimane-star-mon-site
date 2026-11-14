@@ -28,8 +28,8 @@ export const Frise: React.FC<{ tl: Timeline }> = ({ tl }) => {
   const actif = indexActif(tl, f);
   const pulse = 0.5 + 0.5 * Math.sin((f / fps) * 3.2);
 
-  const apparition = spring({ frame: f - 14, fps, config: { damping: 22, stiffness: 90 } });
-  const traceBase = interpolate(f, [12, 40], [0, 1], { ...clamp, easing: Easing.out(Easing.cubic) });
+  const apparition = spring({ frame: f + 10, fps, config: { damping: 22, stiffness: 90 } });
+  const traceBase = interpolate(f, [-10, 20], [0, 1], { ...clamp, easing: Easing.out(Easing.cubic) });
 
   return (
     <div
@@ -78,7 +78,7 @@ export const Frise: React.FC<{ tl: Timeline }> = ({ tl }) => {
         const etat = estActif ? Math.min(activation, 1.15) : 0;
         const taille = 26 + etat * 22; // 26 → 48 px
         const onde = estActif ? interpolate((f - s.from) % Math.round(fps * 1.4), [0, fps * 1.4], [0, 1]) : 0;
-        const delai = spring({ frame: f - 16 - i * 3, fps, config: { damping: 20, stiffness: 120 } });
+        const delai = spring({ frame: f + 12 - i * 3, fps, config: { damping: 20, stiffness: 120 } });
 
         return (
           <div key={i} style={{ position: "absolute", left: x, top: 29, transform: `scale(${delai})` }}>

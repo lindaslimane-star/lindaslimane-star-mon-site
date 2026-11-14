@@ -15,29 +15,32 @@ export const configuration: EvolutionProps = {
   titre: "6 MOIS DE CURE",
   marque: "R92",
   sousTitre: "MON ÉVOLUTION MOIS PAR MOIS",
-  dureeSousTitre: 4,
+  dureeSousTitre: 3,
   introSecondes: 0.5,
   transitionSecondes: 0.6,
   zoom: 0.07,
 
+  // 0 à 3 s : 1er et dernier mois côte à côte pour capter l'attention
+  accroche: { active: true, duree: 3 },
+
   periodes: [
-    // Plan produit d'ouverture (hors frise)
-    { intitule: "MA CURE R92",   etape: "",      date: "", fichier: "evolution/gummies-1.mp4", duree: 1.9, cadrage: "50% 40%", debutVideo: 0, afficher: true, dansLaFrise: false },
+    // Plan produit (non utilisé pour l'instant : afficher = false)
+    { intitule: "MA CURE R92",   etape: "",      date: "", fichier: "evolution/gummies-1.mp4", duree: 1.9, cadrage: "50% 40%", debutVideo: 0, afficher: false, dansLaFrise: false, texteBas: "" },
     // Pas de vidéo « avant » fournie : la ligne reste vide, donc masquée.
-    { intitule: "AVANT LA CURE", etape: "AVANT", date: "", fichier: "",                         duree: 3.5, cadrage: "50% 30%", debutVideo: 0, afficher: true, dansLaFrise: true },
-    { intitule: "1er MOIS",      etape: "1",     date: "", fichier: "evolution/mois-1.mp4",     duree: 3.0, cadrage: "50% 35%", debutVideo: 0, afficher: true, dansLaFrise: true },
-    { intitule: "2e MOIS",       etape: "2",     date: "", fichier: "evolution/mois-2.mp4",     duree: 3.4, cadrage: "50% 30%", debutVideo: 0, afficher: true, dansLaFrise: true },
-    { intitule: "3e MOIS",       etape: "3",     date: "", fichier: "evolution/mois-3.mp4",     duree: 3.0, cadrage: "50% 35%", debutVideo: 0, afficher: true, dansLaFrise: true },
-    { intitule: "4e MOIS",       etape: "4",     date: "", fichier: "evolution/mois-4.mp4",     duree: 3.8, cadrage: "50% 30%", debutVideo: 0, afficher: true, dansLaFrise: true },
-    { intitule: "5e MOIS",       etape: "5",     date: "", fichier: "evolution/mois-5.mp4",     duree: 3.8, cadrage: "50% 30%", debutVideo: 0, afficher: true, dansLaFrise: true },
-    { intitule: "6e MOIS",       etape: "6",     date: "", fichier: "evolution/mois-6.mp4",     duree: 4.4, cadrage: "50% 30%", debutVideo: 0, afficher: true, dansLaFrise: true },
+    { intitule: "AVANT LA CURE", etape: "AVANT", date: "", fichier: "",                         duree: 3.5, cadrage: "50% 30%", debutVideo: 0, afficher: true, dansLaFrise: true, texteBas: "" },
+    { intitule: "1er MOIS",      etape: "1",     date: "", fichier: "evolution/mois-1.mp4",     duree: 3.0, cadrage: "50% 35%", debutVideo: 0, afficher: true, dansLaFrise: true, texteBas: "" },
+    { intitule: "2e MOIS",       etape: "2",     date: "", fichier: "evolution/mois-2.mp4",     duree: 3.4, cadrage: "50% 30%", debutVideo: 0, afficher: true, dansLaFrise: true, texteBas: "" },
+    { intitule: "3e MOIS",       etape: "3",     date: "", fichier: "evolution/mois-3.mp4",     duree: 3.0, cadrage: "50% 35%", debutVideo: 0, afficher: true, dansLaFrise: true, texteBas: "" },
+    { intitule: "4e MOIS",       etape: "4",     date: "", fichier: "evolution/mois-4.mp4",     duree: 3.8, cadrage: "50% 30%", debutVideo: 0, afficher: true, dansLaFrise: true, texteBas: "" },
+    { intitule: "5e MOIS",       etape: "5",     date: "", fichier: "evolution/mois-5.mp4",     duree: 3.8, cadrage: "50% 30%", debutVideo: 0, afficher: true, dansLaFrise: true, texteBas: "" },
+    { intitule: "6e MOIS",       etape: "6",     date: "", fichier: "evolution/mois-6.mp4",     duree: 4.4, cadrage: "50% 30%", debutVideo: 0, afficher: true, dansLaFrise: true, texteBas: "" },
     // Plan produit avant la comparaison finale (hors frise)
-    { intitule: "MA ROUTINE R92", etape: "",     date: "", fichier: "evolution/gummies-2.mp4", duree: 2.5, cadrage: "50% 40%", debutVideo: 0, afficher: true, dansLaFrise: false },
+    { intitule: "", etape: "", date: "", fichier: "evolution/gummies-2.mp4", duree: 4.0, cadrage: "50% 40%", debutVideo: 0, afficher: true, dansLaFrise: false, texteBas: "2 GUMMIES PAR JOUR\nPENDANT 6 MOIS" },
   ],
 
   comparaisonFinale: {
     active: true,
-    duree: 4.5,
+    duree: 4.0,
     slogan: "MOIS APRÈS MOIS, AVEC R92",
   },
 

@@ -14,6 +14,8 @@ export type Timeline = {
   /** Segments qui sont des étapes de la frise (mois). */
   frise: Segment[];
   intro: number;
+  /** Durée de l'accroche côte à côte au début (frames, 0 = aucune). */
+  accrocheDur: number;
   trans: number;
   finPeriodes: number;
   compFrom: number;
@@ -40,7 +42,10 @@ export const construireTimeline = (
   fps: number,
 ): Timeline => {
   const periodes = periodesVisibles(props);
-  const intro = Math.round(props.introSecondes * fps);
+  const nbFrise = periodes.filter((p) => p.dansLaFrise).length;
+  const accrocheDur =
+    props.accroche.active && nbFrise >= 2 ? Math.round(props.accroche.duree * fps) : 0;
+  const intro = accrocheDur > 0 ? accrocheDur : Math.round(props.introSecondes * fps);
   const trans = Math.max(2, Math.round(props.transitionSecondes * fps));
 
   let t = intro;
@@ -68,7 +73,7 @@ export const construireTimeline = (
     finPeriodes + (compDur > 0 ? compDur : Math.round(0.8 * fps)),
   );
 
-  return { segments, frise, intro, trans, finPeriodes, compFrom: finPeriodes, compDur, total };
+  return { segments, frise, intro, accrocheDur, trans, finPeriodes, compFrom: finPeriodes, compDur, total };
 };
 
 /** Index de l'étape active de la frise à la frame f (-1 = aucune encore). */

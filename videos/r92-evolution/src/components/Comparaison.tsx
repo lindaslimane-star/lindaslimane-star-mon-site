@@ -8,7 +8,7 @@ import { Etiquette } from "./Etiquette";
 
 const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
 
-/** Fin : première et dernière périodes documentées côte à côte. */
+/** Premier et dernier mois côte à côte (accroche du début et écran de fin). */
 export const Comparaison: React.FC<{
   tl: Timeline;
   props: EvolutionProps;
@@ -16,19 +16,23 @@ export const Comparaison: React.FC<{
   apres: PeriodeResolue;
   slogan: string;
   marque: string;
-}> = ({ tl, props, avant, apres, slogan, marque }) => {
+  debut: number;
+  duree: number;
+  /** true = visible dès la 1re image (accroche), sans fondu d'entrée. */
+  immediat?: boolean;
+}> = ({ tl, props, avant, apres, slogan, marque, debut, duree, immediat = false }) => {
   const f = useCurrentFrame();
   const { fps } = useVideoConfig();
-  const debut = tl.compFrom;
-  if (f < debut) return null;
+  if (f < debut || f > debut + duree + tl.trans) return null;
   const l = f - debut;
+  const avance = immediat ? 24 : 0; // l'accroche est déjà presque en place à la frame 0
 
-  const fond = interpolate(l, [0, tl.trans], [0, 1], { ...clamp, easing: Easing.inOut(Easing.sin) });
-  const gauche = spring({ frame: l - 4, fps, config: { damping: 20, stiffness: 100 } });
-  const droite = spring({ frame: l - 10, fps, config: { damping: 20, stiffness: 100 } });
+  const fond = immediat ? 1 : interpolate(l, [0, tl.trans], [0, 1], { ...clamp, easing: Easing.inOut(Easing.sin) });
+  const gauche = spring({ frame: l + avance - 4, fps, config: { damping: 20, stiffness: 100 } });
+  const droite = spring({ frame: l + avance - 7, fps, config: { damping: 20, stiffness: 100 } });
   const texte = spring({ frame: l - 22, fps, config: { damping: 22, stiffness: 110 } });
-  const zoom = interpolate(l, [0, tl.compDur], [1, 1.05], clamp);
-  const fleche = spring({ frame: l - 16, fps, config: { damping: 14, stiffness: 120 } });
+  const zoom = interpolate(l, [0, duree], [1, 1.05], clamp);
+  const fleche = spring({ frame: l + avance - 12, fps, config: { damping: 14, stiffness: 120 } });
 
   const carte = (p: PeriodeResolue, prog: number, dir: number, libelle: string) => (
     <div
@@ -46,7 +50,7 @@ export const Comparaison: React.FC<{
     >
       <div style={{ width: "100%", height: "100%", transform: `scale(${zoom})` }}>
         <Sequence from={debut} layout="none">
-          <Media periode={p} vitesse={vitesseLecture(props, p, (tl.total - tl.compFrom) / fps)} />
+          <Media periode={p} vitesse={vitesseLecture(props, p, (duree + tl.trans) / fps)} />
         </Sequence>
       </div>
       <div
@@ -103,6 +107,7 @@ export const Comparaison: React.FC<{
           </svg>
         </div>
       </div>
+      {slogan ? (
       <div
         style={{
           height: 150,
@@ -130,6 +135,7 @@ export const Comparaison: React.FC<{
         />
         <div style={{ fontSize: 24, fontWeight: 700, color: COULEURS.bleuClair, letterSpacing: 8 }}>{marque}</div>
       </div>
+      ) : null}
     </div>
   );
 };
