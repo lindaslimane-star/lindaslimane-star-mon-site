@@ -21,6 +21,10 @@ const VARIANTS: Record<string, { props: string; dir: string; files: Record<strin
     props: "ad-props-3mois-v2.json", dir: "3mois-v2", composition: "R92Cure3MoisV2", output: "R92_cure_3_mois_v2.mp4",
     files: { before: "avant.mp4", after: "apres.mp4", gummies: "gummies.mp4" },
   },
+  "1an-v3": {
+    props: "ad-props-1an-v3.json", dir: "1an-v3", composition: "R92Cure1AnV3", output: "R92_cure_1_an_v3.mp4",
+    files: { before: "avant.mp4", after: "apres.mp4", gummies: "gummies.mp4" },
+  },
   "1an-v2": {
     props: "ad-props-1an-v2.json", dir: "1an-v2", composition: "R92Cure1AnV2", output: "R92_cure_1_an_v2.mp4",
     files: { before: "avant.mp4", after: "apres.mp4", gummies: "gummies.mp4" },

@@ -1,0 +1,42 @@
+{
+  "durationInSeconds": 24,
+  "titleText": "1 AN DE CURE",
+  "titleBrand": "R92",
+  "before": {
+    "src": "videos/1an-v3/avant.mp4",
+    "label": "AVANT LA CURE",
+    "crop": {
+      "fit": "cover",
+      "zoom": 1,
+      "x": 50,
+      "y": 50
+    },
+    "volume": 0
+  },
+  "after": {
+    "src": "videos/1an-v3/apres.mp4",
+    "label": "APRÈS 1 AN",
+    "crop": {
+      "fit": "cover",
+      "zoom": 1,
+      "x": 50,
+      "y": 50
+    },
+    "volume": 0
+  },
+  "gummies": {
+    "src": "videos/1an-v3/gummies.mp4",
+    "label": "",
+    "crop": {
+      "fit": "cover",
+      "zoom": 1,
+      "x": 50,
+      "y": 40
+    },
+    "volume": 0
+  },
+  "messageLine1": "2 GUMMIES PAR JOUR",
+  "messageLine2": "PENDANT 1 AN",
+  "disclaimer": "Complément alimentaire · Résultats variables selon les personnes · Vidéos non retouchées",
+  "layout": "duo"
+}

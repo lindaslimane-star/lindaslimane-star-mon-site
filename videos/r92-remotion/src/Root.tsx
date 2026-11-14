@@ -9,6 +9,7 @@ import saved3Mois from "../ad-props.json";
 import saved1An from "../ad-props-1an.json";
 import saved1AnV2 from "../ad-props-1an-v2.json";
 import saved3MoisV2 from "../ad-props-3mois-v2.json";
+import saved1AnV3 from "../ad-props-1an-v3.json";
 
 const withDuration = async (slot: VideoSlot): Promise<VideoSlot> => {
   try {
@@ -53,5 +54,6 @@ export const RemotionRoot: React.FC = () => (
     <Variant id="R92Cure1An" saved={saved1An} />
     <Variant id="R92Cure1AnV2" saved={saved1AnV2} />
     <Variant id="R92Cure3MoisV2" saved={saved3MoisV2} />
+    <Variant id="R92Cure1AnV3" saved={saved1AnV3} />
   </>
 );
