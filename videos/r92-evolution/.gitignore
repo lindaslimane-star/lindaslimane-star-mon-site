@@ -1,0 +1,5 @@
+node_modules/
+out/
+# Les photos/vidéos réelles ne sont pas versionnées (données personnelles)
+public/evolution/*
+!public/evolution/LISEZ-MOI.txt

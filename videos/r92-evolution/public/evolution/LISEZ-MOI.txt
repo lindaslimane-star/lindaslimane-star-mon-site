@@ -1,0 +1,8 @@
+Déposez ici vos photos et vidéos d'évolution (JPG, PNG, WEBP, MP4, MOV, WEBM).
+
+Noms attendus par défaut (modifiables dans src/config.ts) :
+  avant.jpg   mois-1.jpg   mois-2.jpg   mois-3.jpg
+  mois-4.jpg  mois-5.jpg   mois-6.jpg
+
+Une période dont le fichier est absent n'apparaît pas dans la vidéo finale
+(ni dans la frise). Les photos ne sont jamais retouchées par le montage.

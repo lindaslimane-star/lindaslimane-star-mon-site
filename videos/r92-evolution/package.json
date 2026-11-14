@@ -1,0 +1,26 @@
+{
+  "name": "r92-evolution-6-mois",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Vidéo verticale R92 : évolution capillaire sur 6 mois (Remotion)",
+  "scripts": {
+    "preview": "remotion studio",
+    "render": "remotion render R92Evolution out/R92_evolution_6_mois.mp4 --props={\\\"modeMaquette\\\":false}",
+    "render:maquette": "remotion render R92Evolution out/R92_evolution_maquette.mp4",
+    "still": "remotion still R92Evolution out/apercu.png --frame=150",
+    "check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@fontsource/montserrat": "5.2.8",
+    "@remotion/cli": "4.0.543",
+    "@remotion/zod-types": "4.0.543",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "remotion": "4.0.543",
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@types/react": "19.1.8",
+    "typescript": "5.8.3"
+  }
+}
