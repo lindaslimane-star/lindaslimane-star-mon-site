@@ -33,9 +33,9 @@ export const configuration: EvolutionProps = {
     { intitule: "3e MOIS",       etape: "3",     date: "", fichier: "evolution/mois-3.mp4",     duree: 3.0, cadrage: "50% 35%", debutVideo: 0, afficher: true, dansLaFrise: true, texteBas: "" },
     { intitule: "4e MOIS",       etape: "4",     date: "", fichier: "evolution/mois-4.mp4",     duree: 3.8, cadrage: "50% 30%", debutVideo: 0, afficher: true, dansLaFrise: true, texteBas: "" },
     { intitule: "5e MOIS",       etape: "5",     date: "", fichier: "evolution/mois-5.mp4",     duree: 3.8, cadrage: "50% 30%", debutVideo: 0, afficher: true, dansLaFrise: true, texteBas: "" },
-    { intitule: "6e MOIS",       etape: "6",     date: "", fichier: "evolution/mois-6.mp4",     duree: 4.4, cadrage: "50% 30%", debutVideo: 0, afficher: true, dansLaFrise: true, texteBas: "" },
-    // Plan produit avant la comparaison finale (hors frise)
-    { intitule: "", etape: "", date: "", fichier: "evolution/gummies-2.mp4", duree: 4.0, cadrage: "50% 40%", debutVideo: 0, afficher: true, dansLaFrise: false, texteBas: "2 GUMMIES PAR JOUR\nPENDANT 6 MOIS" },
+    { intitule: "6e MOIS",       etape: "6",     date: "", fichier: "evolution/mois-6.mp4",     duree: 3.8, cadrage: "50% 30%", debutVideo: 0, afficher: true, dansLaFrise: true, texteBas: "" },
+    // Plan produit avant la comparaison finale (hors frise) — vidéo ralentie ×3 (images intermédiaires)
+    { intitule: "", etape: "", date: "", fichier: "evolution/gummies-lent.mp4", duree: 6.0, cadrage: "50% 40%", debutVideo: 0, afficher: true, dansLaFrise: false, texteBas: "2 GUMMIES PAR JOUR\nPENDANT 6 MOIS" },
   ],
 
   comparaisonFinale: {
