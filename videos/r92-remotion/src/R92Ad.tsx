@@ -5,7 +5,21 @@ import { BrandBox } from "./components/BrandBox";
 import { Frame } from "./components/Frame";
 import { SyncedVideo } from "./components/SyncedVideo";
 import type { AdProps } from "./schema";
-import { COLORS, FONT_DISPLAY, FONT_TEXT, INTRO_FRAMES, LAYOUT as L, WIDTH } from "./theme";
+import { COLORS, FONT_DISPLAY, FONT_TEXT, HEIGHT, INTRO_FRAMES, LAYOUT as L, SAFE, WIDTH } from "./theme";
+
+/** Repères des zones masquées par l'interface Instagram (aperçu de l'éditeur uniquement, jamais exporté). */
+const SafeZoneGuide: React.FC = () => {
+  const mask: React.CSSProperties = { position: "absolute", background: "rgba(239,68,68,0.28)", border: "2px dashed rgba(239,68,68,0.9)" };
+  return (
+    <AbsoluteFill style={{ pointerEvents: "none" }}>
+      <div style={{ ...mask, left: 0, right: 0, top: 0, height: SAFE.top }} />
+      <div style={{ ...mask, left: 0, right: 0, top: SAFE.bottom, height: HEIGHT - SAFE.bottom }} />
+      <div style={{ ...mask, left: 0, width: SAFE.side, top: SAFE.top, height: SAFE.bottom - SAFE.top }} />
+      <div style={{ ...mask, right: 0, width: SAFE.side, top: SAFE.top, height: SAFE.bottom - SAFE.top }} />
+      <div style={{ ...mask, left: SAFE.buttonsX, right: SAFE.side, top: SAFE.buttonsTop, height: SAFE.bottom - SAFE.buttonsTop }} />
+    </AbsoluteFill>
+  );
+};
 
 /** Fondu d'opacité uniquement (pas de déplacement, pas de zoom). */
 const useFade = (from: number, to: number) => {
@@ -37,7 +51,7 @@ const PairLabel: React.FC<{ text: string; highlight?: boolean }> = ({ text, high
           opacity,
           fontFamily: FONT_DISPLAY,
           fontWeight: 700,
-          fontSize: 40,
+          fontSize: 34,
           letterSpacing: 2,
           color: COLORS.white,
           textShadow: "0 2px 6px rgba(0,0,0,0.35)",
@@ -50,7 +64,7 @@ const PairLabel: React.FC<{ text: string; highlight?: boolean }> = ({ text, high
   );
 };
 
-export const R92Ad: React.FC<AdProps> = (props) => {
+export const R92Ad: React.FC<AdProps & { showSafeZone?: boolean }> = (props) => {
   const frame = useCurrentFrame();
   const titleOpacity = useFade(0, INTRO_FRAMES);
   const line1 = useFade(6, INTRO_FRAMES + 6);
@@ -70,7 +84,7 @@ export const R92Ad: React.FC<AdProps> = (props) => {
         style={{
           position: "absolute",
           left: WIDTH / 2 - 420,
-          top: L.pairTop + 120,
+          top: L.pairTop + 80,
           width: 840,
           height: 600,
           borderRadius: "50%",
@@ -93,7 +107,7 @@ export const R92Ad: React.FC<AdProps> = (props) => {
           opacity: titleOpacity,
           fontFamily: FONT_DISPLAY,
           fontWeight: 700,
-          fontSize: 90,
+          fontSize: 82,
           letterSpacing: 1,
           color: COLORS.white,
           whiteSpace: "nowrap",
@@ -101,7 +115,7 @@ export const R92Ad: React.FC<AdProps> = (props) => {
         }}
       >
         <span>{props.titleText}</span>
-        {props.titleBrand ? <BrandBox text={props.titleBrand} fontSize={90} /> : null}
+        {props.titleBrand ? <BrandBox text={props.titleBrand} fontSize={82} /> : null}
       </div>
 
       {/* VIDÉO 1 — AVANT (haut gauche) */}
@@ -141,7 +155,7 @@ export const R92Ad: React.FC<AdProps> = (props) => {
               border: `2px solid ${COLORS.electric}`,
               fontFamily: FONT_DISPLAY,
               fontWeight: 500,
-              fontSize: 30,
+              fontSize: 26,
               letterSpacing: 1.5,
               color: COLORS.white,
               opacity: line1,
@@ -166,9 +180,10 @@ export const R92Ad: React.FC<AdProps> = (props) => {
       >
         <div
           style={{
-            minWidth: 700,
+            minWidth: 600,
+            maxWidth: L.messageMaxWidth,
             height: "100%",
-            padding: "0 56px",
+            padding: "0 44px",
             borderRadius: 22,
             border: `2px solid rgba(59,130,246,${0.4 + titleOpacity * 0.6})`,
             background: `linear-gradient(180deg, rgba(13,42,99,0.9) 0%, rgba(6,26,64,0.92) 100%)`,
@@ -185,7 +200,7 @@ export const R92Ad: React.FC<AdProps> = (props) => {
               opacity: line1,
               fontFamily: FONT_DISPLAY,
               fontWeight: 700,
-              fontSize: 52,
+              fontSize: 44,
               lineHeight: 1.05,
               letterSpacing: 1.5,
               color: COLORS.white,
@@ -199,7 +214,7 @@ export const R92Ad: React.FC<AdProps> = (props) => {
               opacity: line2,
               fontFamily: FONT_DISPLAY,
               fontWeight: 500,
-              fontSize: 36,
+              fontSize: 30,
               lineHeight: 1.1,
               letterSpacing: 6,
               color: COLORS.electric,
@@ -215,8 +230,8 @@ export const R92Ad: React.FC<AdProps> = (props) => {
       <div
         style={{
           position: "absolute",
-          left: L.side,
-          right: L.side,
+          left: (WIDTH - L.messageMaxWidth) / 2,
+          right: (WIDTH - L.messageMaxWidth) / 2,
           top: L.footerTop,
           display: "flex",
           alignItems: "center",
@@ -229,7 +244,8 @@ export const R92Ad: React.FC<AdProps> = (props) => {
           style={{
             fontFamily: FONT_TEXT,
             fontWeight: 500,
-            fontSize: 21,
+            fontSize: 16,
+            whiteSpace: "nowrap",
             lineHeight: 1.3,
             color: "rgba(255,255,255,0.72)",
             textAlign: "center",
@@ -238,6 +254,7 @@ export const R92Ad: React.FC<AdProps> = (props) => {
           {props.disclaimer}
         </span>
       </div>
+      {props.showSafeZone ? <SafeZoneGuide /> : null}
     </AbsoluteFill>
   );
 };

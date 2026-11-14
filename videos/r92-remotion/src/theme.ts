@@ -13,26 +13,36 @@ export const HEIGHT = 1920;
 export const FPS = 30;
 export const INTRO_FRAMES = 15; // 0,5 s
 
-/** Grille (px) de la composition 1080×1920. Tout est calculé ici pour garder des proportions exactes. */
+/**
+ * Zone sûre Instagram Reels (en px de la vidéo 1080×1920).
+ * - Haut : barre d'état, flèche retour, « + » → rien d'important au-dessus de 200 px.
+ * - Bas : nom du compte, légende, barre de progression → rien d'important sous 1590 px.
+ * - Côtés : sur les téléphones très allongés, Instagram coupe ≈ 95 px de chaque côté.
+ * - Droite : colonne de boutons (j'aime, commentaires…) entre ≈ 1130 et 1650 px de hauteur, à partir de x ≈ 895.
+ */
+export const SAFE = { top: 200, bottom: 1590, side: 96, buttonsX: 895, buttonsTop: 1130, buttonsBottom: 1650 } as const;
+
+/** Grille (px) de la composition 1080×1920, entièrement dans la zone sûre. */
 export const LAYOUT = (() => {
-  const side = 36;
-  const gap = 24;
-  const titleTop = 44;
-  const titleHeight = 136;
-  const pairTop = 196;
-  const pairWidth = (WIDTH - side * 2 - gap) / 2; // 492 px chacune — strictement identiques
-  const labelHeight = 72;
-  const pairVideoHeight = 960; // la vedette : ≈ 9:16, cheveux visibles de la racine aux pointes
+  const side = SAFE.side;
+  const gap = 18;
+  const titleTop = SAFE.top;
+  const titleHeight = 108;
+  const pairTop = titleTop + titleHeight + 18;
+  const pairWidth = (WIDTH - side * 2 - gap) / 2; // 435 px chacune — strictement identiques
+  const labelHeight = 60;
+  const pairVideoHeight = 640; // la vedette : cheveux visibles de la racine aux pointes
   const pairHeight = labelHeight + pairVideoHeight;
-  const mainTop = pairTop + pairHeight + 22;
-  const mainWidth = WIDTH - side * 2; // 1008 px
-  const mainHeight = 470; // bandeau secondaire, plus discret que l'avant/après
-  const messageTop = mainTop + mainHeight + 18;
-  const messageHeight = 112;
-  const footerTop = messageTop + messageHeight + 12;
+  const mainTop = pairTop + pairHeight + 18;
+  const mainWidth = WIDTH - side * 2; // 888 px
+  const mainHeight = 400; // bandeau secondaire, plus discret que l'avant/après
+  const messageTop = mainTop + mainHeight + 14;
+  const messageHeight = 92;
+  const messageMaxWidth = (SAFE.buttonsX - WIDTH / 2) * 2 - 20; // centré, sans passer sous les boutons
+  const footerTop = messageTop + messageHeight + 8;
   return {
     side, gap, titleTop, titleHeight, pairTop, pairWidth, labelHeight,
     pairVideoHeight, pairHeight, mainTop, mainWidth, mainHeight,
-    messageTop, messageHeight, footerTop,
+    messageTop, messageHeight, messageMaxWidth, footerTop,
   };
 })();

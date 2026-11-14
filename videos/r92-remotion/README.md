@@ -5,11 +5,17 @@ Trois vidéos jouent **en même temps**, du début à la fin, calées sur la tim
 
 | Emplacement | Fichier à fournir | Cadre |
 |---|---|---|
-| Haut gauche — « AVANT LA CURE » | `public/videos/avant.mp4` | 492×960 px |
-| Haut droite — « APRÈS 3 MOIS » | `public/videos/apres-6-mois.mp4` | 492×960 px (taille identique) |
-| Bas — prise des gummies | `public/videos/gummies.mp4` | 1008×470 px (bandeau secondaire, plus discret) |
+| Haut gauche — « AVANT LA CURE » | `public/videos/avant.mp4` | 435×640 px |
+| Haut droite — « APRÈS 3 MOIS » | `public/videos/apres-6-mois.mp4` | 435×640 px (taille identique) |
+| Bas — prise des gummies | `public/videos/gummies.mp4` | 888×400 px (bandeau secondaire, plus discret) |
 
 Sous la 3ᵉ vidéo : encadré « 2 GUMMIES PAR JOUR / PENDANT 3 MOIS » (placé *sous* la vidéo pour ne jamais cacher le visage ni le produit).
+
+## Zone sûre Instagram Reels
+Tout le contenu (titres, vidéos, message) est placé entre 200 px et 1590 px de hauteur et à 96 px des bords,
+hors de la colonne de boutons à droite : rien n'est caché par l'interface Instagram, même sur les téléphones
+très allongés qui coupent les côtés. Valeurs dans `src/theme.ts` (`SAFE`). Dans l'éditeur, la case
+« Afficher les zones masquées par Instagram » affiche ces zones en rouge (jamais dans l'export).
 
 ## Démarrage
 ```bash

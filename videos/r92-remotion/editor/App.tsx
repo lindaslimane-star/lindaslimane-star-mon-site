@@ -47,6 +47,7 @@ export const App: React.FC = () => {
   const [uploading, setUploading] = useState<SlotKey | null>(null);
   const [render, setRender] = useState<RenderState>({ status: "idle", progress: 0 });
   const [error, setError] = useState<string | null>(null);
+  const [showSafeZone, setShowSafeZone] = useState(true);
   const playerRef = useRef<PlayerRef>(null);
 
   // Charge les réglages enregistrés (ad-props.json)
@@ -137,6 +138,14 @@ export const App: React.FC = () => {
         </section>
 
         <section>
+          <h2>Instagram</h2>
+          <label className="check">
+            <input type="checkbox" checked={showSafeZone} onChange={(e) => setShowSafeZone(e.target.checked)} />
+            <span>Afficher les zones masquées par Instagram (en rouge, jamais exportées)</span>
+          </label>
+        </section>
+
+        <section>
           <h2>Durée</h2>
           <Slider label="Durée totale" value={props.durationInSeconds} min={20} max={30} step={0.5} unit=" s"
             onChange={(v) => setProps({ ...props, durationInSeconds: v })} />
@@ -196,7 +205,7 @@ export const App: React.FC = () => {
         <Player
           ref={playerRef}
           component={R92Ad}
-          inputProps={props}
+          inputProps={{ ...props, showSafeZone }}
           durationInFrames={durationInFrames}
           fps={FPS}
           compositionWidth={WIDTH}
