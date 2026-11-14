@@ -1,4 +1,4 @@
-# Pub R92 — « 6 mois de cure » (Remotion)
+# Pub R92 — « 3 mois de cure » (Remotion)
 
 Publicité verticale **1080×1920, 9:16, 30 i/s, MP4 H.264**, durée réglable de **20 à 30 s** (24 s par défaut).
 Trois vidéos jouent **en même temps**, du début à la fin, calées sur la timeline principale :
@@ -6,10 +6,10 @@ Trois vidéos jouent **en même temps**, du début à la fin, calées sur la tim
 | Emplacement | Fichier à fournir | Cadre |
 |---|---|---|
 | Haut gauche — « AVANT LA CURE » | `public/videos/avant.mp4` | 492×960 px |
-| Haut droite — « APRÈS 6 MOIS » | `public/videos/apres-6-mois.mp4` | 492×960 px (taille identique) |
+| Haut droite — « APRÈS 3 MOIS » | `public/videos/apres-6-mois.mp4` | 492×960 px (taille identique) |
 | Bas — prise des gummies | `public/videos/gummies.mp4` | 1008×470 px (bandeau secondaire, plus discret) |
 
-Sous la 3ᵉ vidéo : encadré « 2 GUMMIES PAR JOUR / PENDANT 6 MOIS » (placé *sous* la vidéo pour ne jamais cacher le visage ni le produit).
+Sous la 3ᵉ vidéo : encadré « 2 GUMMIES PAR JOUR / PENDANT 3 MOIS » (placé *sous* la vidéo pour ne jamais cacher le visage ni le produit).
 
 ## Démarrage
 ```bash
@@ -35,14 +35,14 @@ bash scripts/prepare-sources.sh AVANT.mov APRES.mov GUMMIES_PLAN_LARGE.mov GUMMI
 - Modifier les **titres**, le message, la mention de bas de page.
 - **Cadrage indépendant** par vidéo : « Remplir le cadre » ou « Image entière (sans coupe) », zoom ≥ 1 (jamais de déformation), point focal horizontal / vertical, volume.
 - Régler la **durée** (20–30 s).
-- **Exporter** le MP4 final → `out/R92_cure_6_mois.mp4` + lien de téléchargement.
+- **Exporter** le MP4 final → `out/R92_cure_3_mois.mp4` + lien de téléchargement.
 
 Les réglages sont enregistrés automatiquement dans `ad-props.json`.
 
 ## Autres commandes
 ```bash
 npm run studio   # Remotion Studio (aperçu image par image, réglages dans le panneau de droite)
-npm run render   # export MP4 H.264 avec les réglages de ad-props.json → out/R92_cure_6_mois.mp4
+npm run render   # export MP4 H.264 avec les réglages de ad-props.json → out/R92_cure_3_mois.mp4
 npm run still    # image d'aperçu PNG (frame 45)
 ```
 Si Remotion ne peut pas télécharger son navigateur (réseau restreint), indiquez un Chromium « headless shell » existant :

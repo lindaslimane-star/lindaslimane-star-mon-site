@@ -31,5 +31,5 @@ drawtext=fontfile=${FONT}:text='durée source ${d}s (boucle)':fontcolor=white@0.
 }
 
 make avant.mp4        720 1280  7 0x334155 'AVANT LA CURE'
-make apres-6-mois.mp4 720 1280  9 0x3B82F6 'APRÈS 6 MOIS'
+make apres-6-mois.mp4 720 1280  9 0x3B82F6 'APRÈS 3 MOIS'
 make gummies.mp4     1280  720 11 0x1d4ed8 'PRISE DES GUMMIES'

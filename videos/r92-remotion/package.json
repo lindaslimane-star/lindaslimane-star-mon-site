@@ -8,7 +8,7 @@
     "placeholders": "bash scripts/make-placeholders.sh",
     "studio": "remotion studio src/index.ts",
     "editor": "vite --config editor/vite.config.ts",
-    "render": "remotion render src/index.ts R92Cure out/R92_cure_6_mois.mp4 --props=./ad-props.json --codec=h264 --crf=18",
+    "render": "remotion render src/index.ts R92Cure out/R92_cure_3_mois.mp4 --props=./ad-props.json --codec=h264 --crf=18",
     "still": "remotion still src/index.ts R92Cure out/apercu.png --props=./ad-props.json --frame=45",
     "typecheck": "tsc --noEmit"
   },

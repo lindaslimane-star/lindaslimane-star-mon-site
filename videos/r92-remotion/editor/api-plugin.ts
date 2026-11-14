@@ -58,7 +58,7 @@ const startRender = async (props: Record<string, unknown>) => {
     const composition = await selectComposition({ serveUrl, id: "R92Cure", inputProps: props, browserExecutable });
     renderState = { status: "rendering", progress: 0 };
     fs.mkdirSync(OUT_DIR, { recursive: true });
-    const file = "R92_cure_6_mois.mp4";
+    const file = "R92_cure_3_mois.mp4";
     await renderMedia({
       composition,
       serveUrl,

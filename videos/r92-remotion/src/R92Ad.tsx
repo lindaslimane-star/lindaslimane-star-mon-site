@@ -112,7 +112,7 @@ export const R92Ad: React.FC<AdProps> = (props) => {
         <PairLabel text={props.before.label} />
       </Frame>
 
-      {/* VIDÉO 2 — APRÈS 6 MOIS (haut droite) — même taille exacte */}
+      {/* VIDÉO 2 — APRÈS 3 MOIS (haut droite) — même taille exacte */}
       <Frame
         left={L.side + L.pairWidth + L.gap}
         top={L.pairTop}

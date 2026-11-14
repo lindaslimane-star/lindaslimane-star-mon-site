@@ -7,7 +7,7 @@ import { FPS, HEIGHT, WIDTH } from "../src/theme";
 type SlotKey = "before" | "after" | "gummies";
 const SLOT_INFO: Record<SlotKey, { title: string; file: string }> = {
   before: { title: "Vidéo 1 — Avant la cure (haut gauche)", file: "public/videos/avant.mp4" },
-  after: { title: "Vidéo 2 — Après 6 mois (haut droite)", file: "public/videos/apres-6-mois.mp4" },
+  after: { title: "Vidéo 2 — Après 3 mois (haut droite)", file: "public/videos/apres-6-mois.mp4" },
   gummies: { title: "Vidéo 3 — Prise des gummies (bas)", file: "public/videos/gummies.mp4" },
 };
 type RenderState = { status: string; progress: number; file?: string; error?: string };
