@@ -7,7 +7,7 @@ Trois vidéos jouent **en même temps**, du début à la fin, calées sur la tim
 |---|---|---|
 | Haut gauche — « AVANT LA CURE » | `public/videos/avant.mp4` | 492×720 px |
 | Haut droite — « APRÈS 6 MOIS » | `public/videos/apres-6-mois.mp4` | 492×720 px (taille identique) |
-| Bas — prise des gummies | `public/videos/gummies.mp4` | 1008×590 px (horizontal) |
+| Bas — prise des gummies | `public/videos/gummies.mp4` | 1008×680 px (horizontal) |
 
 Sous la 3ᵉ vidéo : encadré « 2 GUMMIES PAR JOUR / PENDANT 6 MOIS » (placé *sous* la vidéo pour ne jamais cacher le visage ni le produit).
 
@@ -20,6 +20,14 @@ npm run editor         # interface d'édition → http://localhost:5173
 ```
 Les vidéos temporaires affichent seulement un libellé et un chronomètre (aucune image de cheveux, aucun résultat simulé) :
 le chronomètre permet de vérifier que les trois lectures sont simultanées et que les boucles repartent bien.
+
+## Intégrer les vidéos du smartphone (verticales)
+```bash
+bash scripts/prepare-sources.sh AVANT.mov APRES.mov GUMMIES_PLAN_LARGE.mov GUMMIES_GROS_PLAN.mov
+```
+- Avant / après : le flux vidéo d'origine est copié tel quel (MOV → MP4, aucune ré-compression).
+- Gummies : les clips sont mis bout à bout en 1080×726. Le plan large (visage + pot) est affiché entier sur un fond
+  flouté du même plan ; le gros plan est recadré des yeux à la bouche (gummy visible). Aucun filtre sur le sujet.
 
 ## Interface d'édition (`npm run editor`)
 - **Importer** chaque vidéo (MP4, MOV…) : elle est copiée dans `public/videos/` et convertie en MP4 H.264 sans aucun filtre ni retouche.

@@ -17,19 +17,19 @@ export const INTRO_FRAMES = 15; // 0,5 s
 export const LAYOUT = (() => {
   const side = 36;
   const gap = 24;
-  const titleTop = 62;
-  const titleHeight = 150;
-  const pairTop = 240;
+  const titleTop = 50;
+  const titleHeight = 140;
+  const pairTop = 212;
   const pairWidth = (WIDTH - side * 2 - gap) / 2; // 492 px chacune — strictement identiques
   const labelHeight = 72;
   const pairVideoHeight = 720;
   const pairHeight = labelHeight + pairVideoHeight;
-  const mainTop = pairTop + pairHeight + 30;
+  const mainTop = pairTop + pairHeight + 26;
   const mainWidth = WIDTH - side * 2; // 1008 px
-  const mainHeight = 590;
-  const messageTop = mainTop + mainHeight + 26;
-  const messageHeight = 150;
-  const footerTop = messageTop + messageHeight + 16;
+  const mainHeight = 680; // ratio ≈ 1,49 (même ratio que gummies.mp4 préparé en 1080×726)
+  const messageTop = mainTop + mainHeight + 22;
+  const messageHeight = 132;
+  const footerTop = messageTop + messageHeight + 18;
   return {
     side, gap, titleTop, titleHeight, pairTop, pairWidth, labelHeight,
     pairVideoHeight, pairHeight, mainTop, mainWidth, mainHeight,
