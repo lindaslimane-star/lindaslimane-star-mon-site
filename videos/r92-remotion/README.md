@@ -1,4 +1,22 @@
-# Pub R92 — « 3 mois de cure » (Remotion)
+# Pubs R92 — « 3 mois de cure » et « 1 an de cure » (Remotion)
+
+Deux pubs partagent le même code :
+
+| Pub | Réglages | Vidéos | Composition | Export | Mise en page |
+|---|---|---|---|---|---|
+| Cure 3 mois | `ad-props.json` | `public/videos/` | `R92Cure` | `npm run render` → `out/R92_cure_3_mois.mp4` | classique |
+| Cure 1 an | `ad-props-1an.json` | `public/videos/1an/` (`avant.mp4`, `apres.mp4`, `gummies.mp4`) | `R92Cure1An` | `npm run render:1an` → `out/R92_cure_1_an.mp4` | vedette |
+
+Mises en page (`layout`) : **classique** = avant/après 435×640 + gummies 888×400 ;
+**vedette** = avant/après 435×774 (≈ 9:16, image entière) + bandeau gummies fin 888×280.
+Dans l'éditeur : boutons « Cure 3 mois / Cure 1 an » en haut, et menu « Mise en page ».
+
+Préparer les vidéos de la pub 1 an (un seul clip gummies → gardé dans son format d'origine) :
+`OUT=public/videos/1an bash scripts/prepare-sources.sh AVANT.mov APRES.mov GUMMIES.mov`
+
+---
+
+Détails de la pub 3 mois :
 
 Publicité verticale **1080×1920, 9:16, 30 i/s, MP4 H.264**, durée réglable de **20 à 30 s** (24 s par défaut).
 Trois vidéos jouent **en même temps**, du début à la fin, calées sur la timeline principale :

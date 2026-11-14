@@ -22,8 +22,10 @@ export const INTRO_FRAMES = 15; // 0,5 s
  */
 export const SAFE = { top: 200, bottom: 1590, side: 96, buttonsX: 895, buttonsTop: 1130, buttonsBottom: 1650 } as const;
 
+export type LayoutName = "classique" | "vedette";
+
 /** Grille (px) de la composition 1080×1920, entièrement dans la zone sûre. */
-export const LAYOUT = (() => {
+const makeLayout = (o: { pairVideoHeight: number; mainHeight: number; messageHeight: number; line1: number; line2: number; gapV: number }) => {
   const side = SAFE.side;
   const gap = 18;
   const titleTop = SAFE.top;
@@ -31,18 +33,26 @@ export const LAYOUT = (() => {
   const pairTop = titleTop + titleHeight + 18;
   const pairWidth = (WIDTH - side * 2 - gap) / 2; // 435 px chacune — strictement identiques
   const labelHeight = 60;
-  const pairVideoHeight = 640; // la vedette : cheveux visibles de la racine aux pointes
+  const pairVideoHeight = o.pairVideoHeight;
   const pairHeight = labelHeight + pairVideoHeight;
-  const mainTop = pairTop + pairHeight + 18;
+  const mainTop = pairTop + pairHeight + o.gapV;
   const mainWidth = WIDTH - side * 2; // 888 px
-  const mainHeight = 400; // bandeau secondaire, plus discret que l'avant/après
-  const messageTop = mainTop + mainHeight + 14;
-  const messageHeight = 92;
+  const mainHeight = o.mainHeight;
+  const messageTop = mainTop + mainHeight + o.gapV - 4;
+  const messageHeight = o.messageHeight;
   const messageMaxWidth = (SAFE.buttonsX - WIDTH / 2) * 2 - 20; // centré, sans passer sous les boutons
   const footerTop = messageTop + messageHeight + 8;
   return {
     side, gap, titleTop, titleHeight, pairTop, pairWidth, labelHeight,
     pairVideoHeight, pairHeight, mainTop, mainWidth, mainHeight,
-    messageTop, messageHeight, messageMaxWidth, footerTop,
+    messageTop, messageHeight, messageMaxWidth, footerTop, line1: o.line1, line2: o.line2,
   };
-})();
+};
+
+export const LAYOUTS = {
+  /** Avant/après 435×640, vidéo gummies 888×400 */
+  classique: makeLayout({ pairVideoHeight: 640, mainHeight: 400, messageHeight: 92, line1: 44, line2: 30, gapV: 18 }),
+  /** Avant/après en vedette 435×774 (≈ 9:16, image entière), bandeau gummies fin 888×280 */
+  vedette: makeLayout({ pairVideoHeight: 774, mainHeight: 280, messageHeight: 84, line1: 40, line2: 28, gapV: 16 }),
+} as const;
+export type Layout = (typeof LAYOUTS)[LayoutName];

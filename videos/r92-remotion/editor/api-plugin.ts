@@ -7,12 +7,18 @@ import type { Plugin } from "vite";
 const ROOT = path.resolve(__dirname, "..");
 const PUBLIC_VIDEOS = path.join(ROOT, "public", "videos");
 const OUT_DIR = path.join(ROOT, "out");
-const PROPS_FILE = path.join(ROOT, "ad-props.json");
-const SLOTS: Record<string, string> = {
-  before: "avant.mp4",
-  after: "apres-6-mois.mp4",
-  gummies: "gummies.mp4",
+/** Une pub = un fichier de réglages + un dossier de vidéos + un fichier exporté. */
+const VARIANTS: Record<string, { props: string; dir: string; files: Record<string, string>; composition: string; output: string }> = {
+  "3mois": {
+    props: "ad-props.json", dir: "", composition: "R92Cure", output: "R92_cure_3_mois.mp4",
+    files: { before: "avant.mp4", after: "apres-6-mois.mp4", gummies: "gummies.mp4" },
+  },
+  "1an": {
+    props: "ad-props-1an.json", dir: "1an", composition: "R92Cure1An", output: "R92_cure_1_an.mp4",
+    files: { before: "avant.mp4", after: "apres.mp4", gummies: "gummies.mp4" },
+  },
 };
+const variantOf = (url: URL) => VARIANTS[url.searchParams.get("variant") ?? "3mois"] ?? VARIANTS["3mois"];
 
 type RenderState = { status: "idle" | "bundling" | "rendering" | "done" | "error"; progress: number; file?: string; error?: string };
 let renderState: RenderState = { status: "idle", progress: 0 };
@@ -48,17 +54,17 @@ const toH264 = async (input: string, output: string) => {
   }
 };
 
-const startRender = async (props: Record<string, unknown>) => {
+const startRender = async (props: Record<string, unknown>, v: (typeof VARIANTS)[string]) => {
   renderState = { status: "bundling", progress: 0 };
   try {
     const { bundle } = await import("@remotion/bundler");
     const { renderMedia, selectComposition } = await import("@remotion/renderer");
     const serveUrl = await bundle({ entryPoint: path.join(ROOT, "src", "index.ts") });
     const browserExecutable = process.env.REMOTION_BROWSER || null;
-    const composition = await selectComposition({ serveUrl, id: "R92Cure", inputProps: props, browserExecutable });
+    const composition = await selectComposition({ serveUrl, inputProps: props, browserExecutable, id: v.composition });
     renderState = { status: "rendering", progress: 0 };
     fs.mkdirSync(OUT_DIR, { recursive: true });
-    const file = "R92_cure_3_mois.mp4";
+    const file = v.output;
     await renderMedia({
       composition,
       serveUrl,
@@ -87,28 +93,31 @@ export const apiPlugin = (): Plugin => ({
       try {
         // Import d'une vidéo dans public/videos/
         if (url.pathname === "/api/upload" && req.method === "POST") {
+          const v = variantOf(url);
           const slot = url.searchParams.get("slot") ?? "";
-          const target = SLOTS[slot];
+          const target = v.files[slot];
           if (!target) return json(res, 400, { error: "Emplacement inconnu" });
-          fs.mkdirSync(PUBLIC_VIDEOS, { recursive: true });
+          const dir = path.join(PUBLIC_VIDEOS, v.dir);
+          fs.mkdirSync(dir, { recursive: true });
           const ext = path.extname(url.searchParams.get("name") ?? ".mp4") || ".mp4";
-          const tmp = path.join(PUBLIC_VIDEOS, `.upload-${slot}${ext}`);
+          const tmp = path.join(dir, `.upload-${slot}${ext}`);
           await new Promise<void>((resolve, reject) => {
             const w = fs.createWriteStream(tmp);
             req.pipe(w);
             w.on("finish", resolve);
             w.on("error", reject);
           });
-          const final = path.join(PUBLIC_VIDEOS, target);
+          const final = path.join(dir, target);
           try {
             await toH264(tmp, final);
           } finally {
             fs.rmSync(tmp, { force: true });
           }
-          return json(res, 200, { src: `videos/${target}`, version: Date.now() });
+          return json(res, 200, { src: ["videos", v.dir, target].filter(Boolean).join("/"), version: Date.now() });
         }
         // Sauvegarde / lecture des réglages (utilisés aussi par `npm run render`)
         if (url.pathname === "/api/props") {
+          const PROPS_FILE = path.join(ROOT, variantOf(url).props);
           if (req.method === "POST") {
             fs.writeFileSync(PROPS_FILE, JSON.stringify(JSON.parse(await readBody(req)), null, 2) + "\n");
             return json(res, 200, { ok: true });
@@ -120,9 +129,10 @@ export const apiPlugin = (): Plugin => ({
           if (req.method === "POST") {
             if (renderState.status === "bundling" || renderState.status === "rendering")
               return json(res, 409, { error: "Un export est déjà en cours" });
+            const v = variantOf(url);
             const props = JSON.parse(await readBody(req));
-            fs.writeFileSync(PROPS_FILE, JSON.stringify(props, null, 2) + "\n");
-            void startRender(props);
+            fs.writeFileSync(path.join(ROOT, v.props), JSON.stringify(props, null, 2) + "\n");
+            void startRender(props, v);
             return json(res, 202, { ok: true });
           }
           return json(res, 200, renderState);

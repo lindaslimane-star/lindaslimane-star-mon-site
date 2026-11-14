@@ -10,7 +10,8 @@
 #      · clip vertical   → affiché en entier (7 % → 86 % de la hauteur) sur un fond flouté du même plan.
 set -euo pipefail
 cd "$(dirname "$0")/.."
-OUT=public/videos
+OUT=${OUT:-public/videos}            # ex. OUT=public/videos/1an pour la pub « 1 an »
+APRES_NAME=${APRES_NAME:-$([[ $OUT == */1an ]] && echo apres.mp4 || echo apres-6-mois.mp4)}
 mkdir -p "$OUT"
 [[ $# -ge 3 ]] || { echo "Usage : $0 AVANT APRES GUMMIES_1 [GUMMIES_2 ...]"; exit 1; }
 AVANT=$1; APRES=$2; shift 2
@@ -25,8 +26,11 @@ copy_or_h264() { # entrée sortie
   fi
 }
 copy_or_h264 "$AVANT" "$OUT/avant.mp4"
-copy_or_h264 "$APRES" "$OUT/apres-6-mois.mp4"
-echo "✓ avant.mp4, apres-6-mois.mp4"
+copy_or_h264 "$APRES" "$OUT/$APRES_NAME"
+echo "✓ avant.mp4, $APRES_NAME"
+
+# Un seul clip gummies : conservé tel quel (format d'origine), simplement converti en H.264 si besoin.
+if [[ $# -eq 1 ]]; then copy_or_h264 "$1" "$OUT/gummies.mp4"; echo "✓ gummies.mp4 (format d'origine)"; exit 0; fi
 
 # Taille du plan gummies : d'après le 1er clip (horizontal → 1920×1004, vertical → 1080×726)
 IFS=x read -r W0 H0 < <(ffprobe -v error -select_streams v:0 -show_entries stream=width,height -of csv=s=x:p=0 "$1")

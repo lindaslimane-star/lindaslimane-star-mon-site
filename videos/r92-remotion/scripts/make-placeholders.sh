@@ -6,7 +6,7 @@
 # Usage : npm run placeholders  (ajoutez --force pour écraser des fichiers existants)
 set -euo pipefail
 cd "$(dirname "$0")/.."
-OUT=public/videos
+OUT=${OUT:-public/videos}
 mkdir -p "$OUT"
 FONT=$(fc-match -f '%{file}' 'DejaVu Sans:bold' 2>/dev/null || echo /usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf)
 FORCE=${1:-}
@@ -23,7 +23,7 @@ make() { # fichier largeur hauteur durée couleur libellé
     -filter_complex "[0][1]overlay=x='mod(t*${w}/3, ${w}+${w}/5)-${w}/5':y=0,\
 drawtext=fontfile=${FONT}:text='VIDÉO TEMPORAIRE':fontcolor=white@0.8:fontsize=${fs}:x=(w-tw)/2:y=h*0.18,\
 drawtext=fontfile=${FONT}:text='${label}':fontcolor=white:fontsize=$((fs*3/2)):x=(w-tw)/2:y=h*0.36,\
-drawtext=fontfile=${FONT}:text='remplacer public/videos/${file}':fontcolor=white@0.75:fontsize=$((fs*2/3)):x=(w-tw)/2:y=h*0.52,\
+drawtext=fontfile=${FONT}:text='remplacer ${OUT}/${file}':fontcolor=white@0.75:fontsize=$((fs*2/3)):x=(w-tw)/2:y=h*0.52,\
 drawtext=fontfile=${FONT}:text='%{pts\:hms}':fontcolor=0x3B82F6:fontsize=$((fs*3/2)):x=(w-tw)/2:y=h*0.68,\
 drawtext=fontfile=${FONT}:text='durée source ${d}s (boucle)':fontcolor=white@0.6:fontsize=$((fs*2/3)):x=(w-tw)/2:y=h*0.82" \
     -c:v libx264 -pix_fmt yuv420p -preset veryfast -crf 26 -movflags +faststart "$OUT/$file"
@@ -31,5 +31,5 @@ drawtext=fontfile=${FONT}:text='durée source ${d}s (boucle)':fontcolor=white@0.
 }
 
 make avant.mp4        720 1280  7 0x334155 'AVANT LA CURE'
-make apres-6-mois.mp4 720 1280  9 0x3B82F6 'APRÈS 3 MOIS'
+if [[ $OUT == */1an ]]; then make apres.mp4 720 1280 9 0x3B82F6 'APRÈS 1 AN'; else make apres-6-mois.mp4 720 1280  9 0x3B82F6 'APRÈS 3 MOIS'; fi
 make gummies.mp4     1280  720 11 0x1d4ed8 'PRISE DES GUMMIES'

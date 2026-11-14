@@ -5,7 +5,7 @@ import { BrandBox } from "./components/BrandBox";
 import { Frame } from "./components/Frame";
 import { SyncedVideo } from "./components/SyncedVideo";
 import type { AdProps } from "./schema";
-import { COLORS, FONT_DISPLAY, FONT_TEXT, HEIGHT, INTRO_FRAMES, LAYOUT as L, SAFE, WIDTH } from "./theme";
+import { COLORS, FONT_DISPLAY, FONT_TEXT, HEIGHT, INTRO_FRAMES, LAYOUTS, SAFE, WIDTH } from "./theme";
 
 /** Repères des zones masquées par l'interface Instagram (aperçu de l'éditeur uniquement, jamais exporté). */
 const SafeZoneGuide: React.FC = () => {
@@ -27,7 +27,7 @@ const useFade = (from: number, to: number) => {
   return interpolate(frame, [from, to], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
 };
 
-const PairLabel: React.FC<{ text: string; highlight?: boolean }> = ({ text, highlight }) => {
+const PairLabel: React.FC<{ text: string; height: number; highlight?: boolean }> = ({ text, height, highlight }) => {
   const opacity = useFade(2, INTRO_FRAMES);
   return (
     <div
@@ -36,7 +36,7 @@ const PairLabel: React.FC<{ text: string; highlight?: boolean }> = ({ text, high
         left: 0,
         top: 0,
         right: 0,
-        height: L.labelHeight,
+        height,
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -66,6 +66,7 @@ const PairLabel: React.FC<{ text: string; highlight?: boolean }> = ({ text, high
 
 export const R92Ad: React.FC<AdProps & { showSafeZone?: boolean }> = (props) => {
   const frame = useCurrentFrame();
+  const L = LAYOUTS[props.layout ?? "classique"];
   const titleOpacity = useFade(0, INTRO_FRAMES);
   const line1 = useFade(6, INTRO_FRAMES + 6);
   const line2 = useFade(12, INTRO_FRAMES + 12);
@@ -123,7 +124,7 @@ export const R92Ad: React.FC<AdProps & { showSafeZone?: boolean }> = (props) => 
         <div style={{ position: "absolute", left: 0, right: 0, top: L.labelHeight, height: L.pairVideoHeight }}>
           <SyncedVideo slot={props.before} />
         </div>
-        <PairLabel text={props.before.label} />
+        <PairLabel text={props.before.label} height={L.labelHeight} />
       </Frame>
 
       {/* VIDÉO 2 — APRÈS 3 MOIS (haut droite) — même taille exacte */}
@@ -137,7 +138,7 @@ export const R92Ad: React.FC<AdProps & { showSafeZone?: boolean }> = (props) => 
         <div style={{ position: "absolute", left: 0, right: 0, top: L.labelHeight, height: L.pairVideoHeight }}>
           <SyncedVideo slot={props.after} />
         </div>
-        <PairLabel text={props.after.label} highlight />
+        <PairLabel text={props.after.label} height={L.labelHeight} highlight />
       </Frame>
 
       {/* VIDÉO 3 — PRISE DES GUMMIES (grande, horizontale) */}
@@ -200,7 +201,7 @@ export const R92Ad: React.FC<AdProps & { showSafeZone?: boolean }> = (props) => 
               opacity: line1,
               fontFamily: FONT_DISPLAY,
               fontWeight: 700,
-              fontSize: 44,
+              fontSize: L.line1,
               lineHeight: 1.05,
               letterSpacing: 1.5,
               color: COLORS.white,
@@ -214,7 +215,7 @@ export const R92Ad: React.FC<AdProps & { showSafeZone?: boolean }> = (props) => 
               opacity: line2,
               fontFamily: FONT_DISPLAY,
               fontWeight: 500,
-              fontSize: 30,
+              fontSize: L.line2,
               lineHeight: 1.1,
               letterSpacing: 6,
               color: COLORS.electric,

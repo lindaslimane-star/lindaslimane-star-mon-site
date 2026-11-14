@@ -5,10 +5,13 @@ import { adSchema, defaultProps, type AdProps, type Crop, type VideoSlot } from 
 import { FPS, HEIGHT, WIDTH } from "../src/theme";
 
 type SlotKey = "before" | "after" | "gummies";
+const VARIANT = new URLSearchParams(location.search).get("variant") === "1an" ? "1an" : "3mois";
+const Q = `variant=${VARIANT}`;
+const DIR = VARIANT === "1an" ? "public/videos/1an/" : "public/videos/";
 const SLOT_INFO: Record<SlotKey, { title: string; file: string }> = {
-  before: { title: "Vidéo 1 — Avant la cure (haut gauche)", file: "public/videos/avant.mp4" },
-  after: { title: "Vidéo 2 — Après 3 mois (haut droite)", file: "public/videos/apres-6-mois.mp4" },
-  gummies: { title: "Vidéo 3 — Prise des gummies (bas)", file: "public/videos/gummies.mp4" },
+  before: { title: "Vidéo 1 — Avant la cure (haut gauche)", file: DIR + "avant.mp4" },
+  after: { title: "Vidéo 2 — Après (haut droite)", file: DIR + (VARIANT === "1an" ? "apres.mp4" : "apres-6-mois.mp4") },
+  gummies: { title: "Vidéo 3 — Prise des gummies (bas)", file: DIR + "gummies.mp4" },
 };
 type RenderState = { status: string; progress: number; file?: string; error?: string };
 
@@ -52,7 +55,7 @@ export const App: React.FC = () => {
 
   // Charge les réglages enregistrés (ad-props.json)
   useEffect(() => {
-    fetch("/api/props").then((r) => r.json()).then((p) => {
+    fetch(`/api/props?${Q}`).then((r) => r.json()).then((p) => {
       setProps({ ...defaultProps, ...p });
       setLoaded(true);
     }).catch(() => setLoaded(true));
@@ -62,7 +65,7 @@ export const App: React.FC = () => {
   useEffect(() => {
     if (!loaded) return;
     const t = setTimeout(() => {
-      fetch("/api/props", { method: "POST", body: JSON.stringify(stripVersion(props)) });
+      fetch(`/api/props?${Q}`, { method: "POST", body: JSON.stringify(stripVersion(props)) });
     }, 600);
     return () => clearTimeout(t);
   }, [props, loaded]);
@@ -95,7 +98,7 @@ export const App: React.FC = () => {
     setError(null);
     setUploading(k);
     try {
-      const r = await fetch(`/api/upload?slot=${k}&name=${encodeURIComponent(file.name)}`, { method: "POST", body: file });
+      const r = await fetch(`/api/upload?${Q}&slot=${k}&name=${encodeURIComponent(file.name)}`, { method: "POST", body: file });
       const j = await r.json();
       if (!r.ok) throw new Error(j.error);
       setSlot(k, { src: `${j.src}?v=${j.version}`, sourceDuration: undefined });
@@ -109,7 +112,7 @@ export const App: React.FC = () => {
 
   const exportMp4 = async () => {
     setError(null);
-    const r = await fetch("/api/render", { method: "POST", body: JSON.stringify(stripVersion(props)) });
+    const r = await fetch(`/api/render?${Q}`, { method: "POST", body: JSON.stringify(stripVersion(props)) });
     if (!r.ok) return setError((await r.json()).error);
     setRender({ status: "bundling", progress: 0 });
   };
@@ -122,6 +125,10 @@ export const App: React.FC = () => {
     <div className="app">
       <aside className="panel">
         <h1>Pub R92 — 3 vidéos simultanées</h1>
+        <nav className="variants">
+          <a href="?variant=3mois" className={VARIANT === "3mois" ? "on" : ""}>Cure 3 mois</a>
+          <a href="?variant=1an" className={VARIANT === "1an" ? "on" : ""}>Cure 1 an</a>
+        </nav>
 
         <section>
           <h2>Titres</h2>
@@ -143,6 +150,15 @@ export const App: React.FC = () => {
             <input type="checkbox" checked={showSafeZone} onChange={(e) => setShowSafeZone(e.target.checked)} />
             <span>Afficher les zones masquées par Instagram (en rouge, jamais exportées)</span>
           </label>
+        </section>
+
+        <section>
+          <h2>Disposition</h2>
+          <label className="row"><span>Mise en page</span>
+            <select value={props.layout ?? "classique"} onChange={(e) => setProps({ ...props, layout: e.target.value as AdProps["layout"] })}>
+              <option value="classique">Classique (gummies 888×400)</option>
+              <option value="vedette">Avant/après en vedette (gummies 888×280)</option>
+            </select></label>
         </section>
 
         <section>

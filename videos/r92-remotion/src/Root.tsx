@@ -5,7 +5,8 @@ import { R92Ad } from "./R92Ad";
 import { adSchema, defaultProps, type AdProps, type VideoSlot } from "./schema";
 import { resolveSrc } from "./resolve-src";
 import { FPS, HEIGHT, WIDTH } from "./theme";
-import savedProps from "../ad-props.json";
+import saved3Mois from "../ad-props.json";
+import saved1An from "../ad-props-1an.json";
 
 const withDuration = async (slot: VideoSlot): Promise<VideoSlot> => {
   try {
@@ -29,16 +30,24 @@ const calculateMetadata: CalculateMetadataFunction<AdProps> = async ({ props }) 
   };
 };
 
-export const RemotionRoot: React.FC = () => (
+const Variant: React.FC<{ id: string; saved: unknown }> = ({ id, saved }) => (
   <Composition
-    id="R92Cure"
+    id={id}
     component={R92Ad}
     schema={adSchema}
-    defaultProps={{ ...defaultProps, ...(savedProps as Partial<AdProps>) }}
+    defaultProps={{ ...defaultProps, ...(saved as Partial<AdProps>) }}
     calculateMetadata={calculateMetadata}
     durationInFrames={Math.round(defaultProps.durationInSeconds * FPS)}
     fps={FPS}
     width={WIDTH}
     height={HEIGHT}
   />
+);
+
+/** R92Cure = pub « 3 mois » (ad-props.json) ; R92Cure1An = pub « 1 an » (ad-props-1an.json). */
+export const RemotionRoot: React.FC = () => (
+  <>
+    <Variant id="R92Cure" saved={saved3Mois} />
+    <Variant id="R92Cure1An" saved={saved1An} />
+  </>
 );

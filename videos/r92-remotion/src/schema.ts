@@ -22,6 +22,8 @@ export const videoSlotSchema = z.object({
 
 export const adSchema = z.object({
   durationInSeconds: z.number().min(20).max(30).step(0.5),
+  /** classique : bandeau gummies moyen ; vedette : avant/après très grands, bandeau gummies fin */
+  layout: z.enum(["classique", "vedette"]).optional(),
   titleText: z.string(),
   titleBrand: z.string(),
   before: videoSlotSchema,
