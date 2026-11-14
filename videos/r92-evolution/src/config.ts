@@ -14,7 +14,7 @@ import type { EvolutionProps } from "./schema";
 export const configuration: EvolutionProps = {
   titre: "6 MOIS DE CURE",
   marque: "R92",
-  sousTitre: "MON ÉVOLUTION MOIS PAR MOIS",
+  sousTitre: "ÉVOLUTION MOIS PAR MOIS",
   dureeSousTitre: 3,
   introSecondes: 0.5,
   transitionSecondes: 0.6,
