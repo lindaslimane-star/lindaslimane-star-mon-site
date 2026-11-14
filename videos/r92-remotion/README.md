@@ -57,6 +57,10 @@ bash scripts/prepare-sources.sh AVANT.mov APRES.mov GUMMIES_PLAN_LARGE.mov GUMMI
 - Gummies : les clips sont mis bout à bout. Clips horizontaux → 1920×1004 (simple mise à l'échelle) ;
   clips verticaux → affichés entiers sur un fond flouté du même plan. Aucun filtre sur le sujet.
 
+### Plusieurs clips dans un même cadre avant / après
+`bash scripts/concat-vertical.sh public/videos/1an-v3/avant.mp4 CLIP_1 CLIP_2` : clips mis bout à bout en 1080×1920 ;
+un clip horizontal est affiché en entier sur un fond flouté du même plan. Aucune retouche du sujet.
+
 ## Interface d'édition (`npm run editor`)
 - **Importer** chaque vidéo (MP4, MOV…) : elle est copiée dans `public/videos/` et convertie en MP4 H.264 sans aucun filtre ni retouche.
 - Aperçu en direct des **3 lectures simultanées** (lecteur Remotion).
