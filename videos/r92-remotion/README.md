@@ -6,6 +6,7 @@ Deux pubs partagent le même code :
 |---|---|---|---|---|---|
 | Cure 3 mois | `ad-props.json` | `public/videos/` | `R92Cure` | `npm run render` → `out/R92_cure_3_mois.mp4` | classique |
 | Cure 1 an | `ad-props-1an.json` | `public/videos/1an/` (`avant.mp4`, `apres.mp4`, `gummies.mp4`) | `R92Cure1An` | `npm run render:1an` → `out/R92_cure_1_an.mp4` | vedette |
+| Cure 3 mois (v2) | `ad-props-3mois-v2.json` | `public/videos/3mois-v2/` | `R92Cure3MoisV2` | `npm run render:3mois-v2` → `out/R92_cure_3_mois_v2.mp4` | vedette |
 | Cure 1 an (v2) | `ad-props-1an-v2.json` | `public/videos/1an-v2/` | `R92Cure1AnV2` | `npm run render:1an-v2` → `out/R92_cure_1_an_v2.mp4` | duo |
 
 Mises en page (`layout`) : **classique** = avant/après 435×640 + gummies 888×400 ;

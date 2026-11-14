@@ -29,3 +29,5 @@ code { font-size:11px; }
 .variants { display:flex; gap:8px; margin-bottom:14px; }
 .variants a { flex:1; text-align:center; padding:8px; border-radius:8px; border:1px solid var(--line); color:#fff; text-decoration:none; font-weight:600; }
 .variants a.on { background: var(--blue); border-color: var(--blue); }
+.variants { flex-wrap: wrap; }
+.variants a { flex: 1 1 40%; }
