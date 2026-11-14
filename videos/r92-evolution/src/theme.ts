@@ -14,15 +14,19 @@ export const W = 1080;
 export const H = 1920;
 export const FPS = 30;
 
-/** Mise en page (pixels, sur 1080 × 1920) — cadre vidéo maximisé. */
+/** Mise en page (pixels, sur 1080 × 1920) — vidéos en plein écran, textes en surimpression. */
 export const LAYOUT = {
   titreTop: 92,
   sousTitreTop: 204,
-  panneauX: 28,
-  panneauW: 1024,
-  panneauTopAvecSousTitre: 304,
-  panneauTopSansSousTitre: 204,
-  panneauBas: 1652,
+  panneauX: 0,
+  panneauW: 1080,
+  panneauTopAvecSousTitre: 0,
+  panneauTopSansSousTitre: 0,
+  panneauBas: 1920,
+  /** Encadré de période, sous le titre et le sous-titre */
+  etiquetteTop: 312,
+  /** Bas des grands textes (au-dessus de la frise) */
+  texteBasBottom: 330,
   friseTop: 1704,
   mentionTop: 1840,
 };

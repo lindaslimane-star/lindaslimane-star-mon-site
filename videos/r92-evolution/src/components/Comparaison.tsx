@@ -5,6 +5,8 @@ import { vitesseLecture, type PeriodeResolue, type Timeline } from "../timing";
 import type { EvolutionProps } from "../schema";
 import { Media } from "./Media";
 import { Etiquette } from "./Etiquette";
+import { Degrades } from "./Degrades";
+import { LAYOUT } from "../theme";
 
 const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
 
@@ -34,16 +36,13 @@ export const Comparaison: React.FC<{
   const zoom = interpolate(l, [0, duree], [1, 1.05], clamp);
   const fleche = spring({ frame: l + avance - 12, fps, config: { damping: 14, stiffness: 120 } });
 
-  const carte = (p: PeriodeResolue, prog: number, dir: number, libelle: string) => (
+  const carte = (p: PeriodeResolue, prog: number, dir: number) => (
     <div
       style={{
         position: "relative",
         flex: 1,
         height: "100%",
-        borderRadius: 30,
         overflow: "hidden",
-        border: "2px solid rgba(156,194,255,0.6)",
-        boxShadow: "0 0 34px rgba(59,139,255,0.25)",
         opacity: prog,
         transform: `translateX(${(1 - prog) * 60 * dir}px)`,
       }}
@@ -52,16 +51,6 @@ export const Comparaison: React.FC<{
         <Sequence from={debut} layout="none">
           <Media periode={p} vitesse={vitesseLecture(props, p, (duree + tl.trans) / fps)} />
         </Sequence>
-      </div>
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          background: "linear-gradient(180deg, rgba(3,14,38,0.5) 0%, rgba(3,14,38,0) 30%)",
-        }}
-      />
-      <div style={{ position: "absolute", top: 26, left: 0, right: 0, display: "flex", justifyContent: "center" }}>
-        <Etiquette texte={libelle} taille={34} />
       </div>
     </div>
   );
@@ -75,13 +64,22 @@ export const Comparaison: React.FC<{
         background: `linear-gradient(180deg, ${COULEURS.marine} 0%, ${COULEURS.marineProfond} 100%)`,
         display: "flex",
         flexDirection: "column",
-        padding: 26,
-        gap: 26,
       }}
     >
-      <div style={{ position: "relative", display: "flex", gap: 22, flex: 1 }}>
-        {carte(avant, gauche, -1, avant.intitule)}
-        {carte(apres, droite, 1, apres.intitule)}
+      <div style={{ position: "relative", display: "flex", gap: 6, flex: 1, background: COULEURS.marine }}>
+        {carte(avant, gauche, -1)}
+        {carte(apres, droite, 1)}
+      </div>
+      <Degrades />
+      {/* libellés au-dessus de chaque moitié */}
+      <div style={{ position: "absolute", top: LAYOUT.etiquetteTop, left: 0, right: 0, display: "flex" }}>
+        {[{ p: avant, prog: gauche }, { p: apres, prog: droite }].map(({ p, prog }, i) => (
+          <div key={i} style={{ flex: 1, display: "flex", justifyContent: "center", opacity: prog }}>
+            <Etiquette texte={p.intitule} taille={44} />
+          </div>
+        ))}
+      </div>
+      <div style={{ position: "absolute", inset: 0 }}>
         {/* pastille centrale */}
         <div
           style={{
@@ -110,6 +108,10 @@ export const Comparaison: React.FC<{
       {slogan ? (
       <div
         style={{
+          position: "absolute",
+          left: 0,
+          right: 0,
+          bottom: LAYOUT.texteBasBottom,
           height: 150,
           display: "flex",
           flexDirection: "column",
@@ -121,7 +123,7 @@ export const Comparaison: React.FC<{
           transform: `translateY(${(1 - texte) * 24}px)`,
         }}
       >
-        <div style={{ fontSize: 44, fontWeight: 900, color: COULEURS.blanc, letterSpacing: 3, textAlign: "center" }}>
+        <div style={{ fontSize: 50, fontWeight: 900, color: COULEURS.blanc, letterSpacing: 3, textAlign: "center", textShadow: "0 4px 24px rgba(0,0,0,0.7)" }}>
           {slogan}
         </div>
         <div

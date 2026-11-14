@@ -18,7 +18,7 @@ export const configuration: EvolutionProps = {
   dureeSousTitre: 3,
   introSecondes: 0.5,
   transitionSecondes: 0.6,
-  zoom: 0.07,
+  zoom: 0.04,
 
   // 0 à 3 s : 1er et dernier mois côte à côte pour capter l'attention
   accroche: { active: true, duree: 3 },

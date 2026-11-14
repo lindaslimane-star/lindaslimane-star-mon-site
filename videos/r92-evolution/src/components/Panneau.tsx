@@ -6,6 +6,7 @@ import type { EvolutionProps } from "../schema";
 import { Media } from "./Media";
 import { Etiquette } from "./Etiquette";
 import { Comparaison } from "./Comparaison";
+import { Degrades } from "./Degrades";
 
 const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
 
@@ -44,49 +45,18 @@ export const Panneau: React.FC<{ tl: Timeline; props: EvolutionProps }> = ({ tl,
         top,
         height: hauteur,
         opacity: apparition,
-        transform: `scale(${0.96 + apparition * 0.04})`,
       }}
     >
-      {/* halo extérieur */}
-      <div
-        style={{
-          position: "absolute",
-          inset: -2,
-          borderRadius: 44,
-          boxShadow: `0 0 ${50 + pulse * 20}px rgba(59,139,255,${0.18 + pulse * 0.08}), 0 30px 80px rgba(0,0,0,0.5)`,
-        }}
-      />
       <div
         style={{
           position: "absolute",
           inset: 0,
-          borderRadius: 42,
           overflow: "hidden",
           background: COULEURS.marine,
         }}
       >
         {tl.segments.map((s) => (
           <Couche key={s.index} s={s} tl={tl} props={props} />
-        ))}
-
-        {/* léger dégradé en haut pour la lisibilité de l'encadré */}
-        <div
-          style={{
-            position: "absolute",
-            left: 0,
-            right: 0,
-            top: 0,
-            height: 260,
-            background: "linear-gradient(180deg, rgba(3,14,38,0.55) 0%, rgba(3,14,38,0) 100%)",
-          }}
-        />
-
-        {tl.segments.map((s) => (
-          <EtiquettePeriode key={`e${s.index}`} s={s} tl={tl} />
-        ))}
-
-        {tl.segments.map((s) => (
-          <TexteBas key={`t${s.index}`} s={s} />
         ))}
 
         {tl.accrocheDur > 0 ? (
@@ -105,33 +75,18 @@ export const Panneau: React.FC<{ tl: Timeline; props: EvolutionProps }> = ({ tl,
             marque={props.marque}
           />
         ) : null}
+
+        <Degrades />
+
+        {tl.segments.map((s) => (
+          <EtiquettePeriode key={`e${s.index}`} s={s} tl={tl} />
+        ))}
+
+        {tl.segments.map((s) => (
+          <TexteBas key={`t${s.index}`} s={s} />
+        ))}
       </div>
 
-      {/* contour bleu clair + balayage électrique */}
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          borderRadius: 42,
-          border: "2px solid rgba(156,194,255,0.55)",
-          pointerEvents: "none",
-        }}
-      />
-      {balayage > 0 && balayage < 1 ? (
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            borderRadius: 42,
-            padding: 3,
-            background: `conic-gradient(from ${balayage * 360 - 90}deg, transparent 0deg, rgba(120,180,255,0.95) 30deg, transparent 70deg)`,
-            WebkitMask: "linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)",
-            WebkitMaskComposite: "xor",
-            maskComposite: "exclude",
-            opacity: Math.sin(balayage * Math.PI),
-          }}
-        />
-      ) : null}
     </div>
   );
 };
@@ -197,7 +152,7 @@ const EtiquettePeriode: React.FC<{ s: Segment; tl: Timeline }> = ({ s, tl }) => 
     <div
       style={{
         position: "absolute",
-        top: 48,
+        top: LAYOUT.etiquetteTop,
         left: 0,
         right: 0,
         display: "flex",
@@ -251,7 +206,7 @@ const TexteBas: React.FC<{ s: Segment }> = ({ s }) => {
         position: "absolute",
         left: 0,
         right: 0,
-        bottom: 70,
+        bottom: LAYOUT.texteBasBottom,
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -288,3 +243,4 @@ const TexteBas: React.FC<{ s: Segment }> = ({ s }) => {
     </div>
   );
 };
+
