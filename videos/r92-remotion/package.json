@@ -1,0 +1,36 @@
+{
+  "name": "r92-pub-remotion",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Publicité verticale R92 — 3 vidéos simultanées (Remotion)",
+  "scripts": {
+    "placeholders": "bash scripts/make-placeholders.sh",
+    "studio": "remotion studio src/index.ts",
+    "editor": "vite --config editor/vite.config.ts",
+    "render": "remotion render src/index.ts R92Cure out/R92_cure_6_mois.mp4 --props=./ad-props.json --codec=h264 --crf=18",
+    "still": "remotion still src/index.ts R92Cure out/apercu.png --props=./ad-props.json --frame=45",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@fontsource/inter": "5.2.8",
+    "@fontsource/oswald": "5.2.8",
+    "@remotion/bundler": "4.0.540",
+    "@remotion/cli": "4.0.540",
+    "@remotion/media-utils": "4.0.540",
+    "@remotion/player": "4.0.540",
+    "@remotion/renderer": "4.0.540",
+    "@remotion/zod-types": "4.0.540",
+    "react": "19.1.1",
+    "react-dom": "19.1.1",
+    "remotion": "4.0.540",
+    "zod": "^4.1.12"
+  },
+  "devDependencies": {
+    "@types/react": "19.1.12",
+    "@types/react-dom": "19.1.9",
+    "@vitejs/plugin-react": "4.7.0",
+    "typescript": "5.9.2",
+    "vite": "6.3.5"
+  }
+}

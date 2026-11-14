@@ -1,0 +1,6 @@
+node_modules/
+out/
+# Vidéos réelles (visages de personnes réelles) : non versionnées.
+# Les vidéos temporaires se régénèrent avec `npm run placeholders`.
+public/videos/*
+!public/videos/.gitkeep

@@ -1,0 +1,26 @@
+:root { --navy:#061A40; --night:#020B1F; --blue:#3B82F6; --line:rgba(59,130,246,.35); color-scheme: dark; }
+* { box-sizing: border-box; }
+body { margin:0; background:var(--night); color:#fff; font:14px/1.4 Inter, system-ui, sans-serif; }
+.app { display:grid; grid-template-columns: 400px 1fr; height:100vh; }
+.panel { overflow:auto; padding:20px; background:var(--navy); border-right:1px solid var(--line); }
+.panel h1 { font-size:18px; margin:0 0 12px; }
+.panel h2 { font-size:13px; text-transform:uppercase; letter-spacing:.08em; color:var(--blue); margin:0 0 10px; }
+section { border:1px solid var(--line); border-radius:12px; padding:14px; margin-bottom:14px; background:rgba(2,11,31,.4); }
+.field { display:flex; flex-direction:column; gap:4px; margin-bottom:10px; }
+.field span, .row span { color:rgba(255,255,255,.75); font-size:12px; }
+input:not([type]), input[type=text], textarea, select { width:100%; background:var(--night); color:#fff; border:1px solid var(--line); border-radius:8px; padding:8px 10px; font:inherit; }
+.row { display:grid; grid-template-columns: 90px 1fr 60px; align-items:center; gap:8px; margin-bottom:8px; }
+.row output { text-align:right; font-variant-numeric: tabular-nums; font-size:12px; }
+input[type=range] { accent-color: var(--blue); width:100%; }
+.upload { position:relative; display:block; margin-bottom:6px; }
+.upload input { position:absolute; inset:0; opacity:0; cursor:pointer; }
+.upload span, button { display:block; width:100%; text-align:center; padding:10px; border-radius:10px; border:1px solid var(--blue); background:rgba(59,130,246,.15); color:#fff; font:600 14px Inter, sans-serif; cursor:pointer; }
+button { background:var(--blue); }
+button:disabled { opacity:.6; cursor:default; }
+progress { width:100%; margin-top:8px; accent-color: var(--blue); }
+.hint { color:rgba(255,255,255,.6); font-size:12px; margin:4px 0 10px; }
+.error { color:#fca5a5; font-size:12px; }
+.download { display:block; margin-top:10px; color:var(--blue); font-weight:600; }
+code { font-size:11px; }
+.stage { display:flex; align-items:center; justify-content:center; padding:24px; overflow:hidden; }
+@media (max-width: 900px) { .app { grid-template-columns: 1fr; height:auto; } .stage { order:-1; } }
