@@ -14,7 +14,8 @@
     "render:1an": "remotion render src/index.ts R92Cure1An out/R92_cure_1_an.mp4 --props=./ad-props-1an.json --codec=h264 --crf=18",
     "render:1an-v2": "remotion render src/index.ts R92Cure1AnV2 out/R92_cure_1_an_v2.mp4 --props=./ad-props-1an-v2.json --codec=h264 --crf=18",
     "render:3mois-v2": "remotion render src/index.ts R92Cure3MoisV2 out/R92_cure_3_mois_v2.mp4 --props=./ad-props-3mois-v2.json --codec=h264 --crf=18",
-    "render:1an-v3": "remotion render src/index.ts R92Cure1AnV3 out/R92_cure_1_an_v3.mp4 --props=./ad-props-1an-v3.json --codec=h264 --crf=18"
+    "render:1an-v3": "remotion render src/index.ts R92Cure1AnV3 out/R92_cure_1_an_v3.mp4 --props=./ad-props-1an-v3.json --codec=h264 --crf=18",
+    "render:3mois-v3": "remotion render src/index.ts R92Cure3MoisV3 out/R92_cure_3_mois_v3.mp4 --props=./ad-props-3mois-v3.json --codec=h264 --crf=18"
   },
   "dependencies": {
     "@fontsource/inter": "5.2.8",

@@ -5,7 +5,7 @@ import { adSchema, defaultProps, type AdProps, type Crop, type VideoSlot } from 
 import { FPS, HEIGHT, WIDTH } from "../src/theme";
 
 type SlotKey = "before" | "after" | "gummies";
-const VARIANTS = { "3mois": "Cure 3 mois", "3mois-v2": "Cure 3 mois (v2)", "1an": "Cure 1 an", "1an-v2": "Cure 1 an (v2)", "1an-v3": "Cure 1 an (v3)" } as const;
+const VARIANTS = { "3mois": "Cure 3 mois", "3mois-v2": "Cure 3 mois (v2)", "3mois-v3": "Cure 3 mois (v3)", "1an": "Cure 1 an", "1an-v2": "Cure 1 an (v2)", "1an-v3": "Cure 1 an (v3)" } as const;
 const requested = new URLSearchParams(location.search).get("variant") ?? "3mois";
 const VARIANT = (requested in VARIANTS ? requested : "3mois") as keyof typeof VARIANTS;
 const Q = `variant=${VARIANT}`;
