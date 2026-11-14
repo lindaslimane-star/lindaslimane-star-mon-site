@@ -22,23 +22,23 @@ export const Titre: React.FC<{ titre: string; marque: string }> = ({ titre, marq
       style={{
         position: "absolute",
         top: LAYOUT.titreTop,
-        left: 0,
-        right: 0,
+left: LAYOUT.zoneX,
+        width: LAYOUT.zoneW,
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        gap: 22,
+        gap: 18,
         fontFamily: POLICE,
       }}
     >
-      <div style={{ display: "flex", gap: 18 }}>
+      <div style={{ display: "flex", gap: 14 }}>
         {mots.map((mot, i) => {
           const p = spring({ frame: f + 24 - i * 2, fps, config: { damping: 20, stiffness: 140 } });
           return (
             <div key={i} style={{ overflow: "hidden", paddingBottom: 4 }}>
               <div
                 style={{
-                  fontSize: 70,
+                  fontSize: 62,
                   fontWeight: 900,
                   color: COULEURS.blanc,
                   letterSpacing: 1,
@@ -69,7 +69,7 @@ export const Titre: React.FC<{ titre: string; marque: string }> = ({ titre, marq
       >
         <div
           style={{
-            fontSize: 70,
+            fontSize: 62,
             fontWeight: 900,
             color: COULEURS.blanc,
             letterSpacing: 2,

@@ -48,4 +48,5 @@ export const configuration: EvolutionProps = {
   musique: "",
   volumeMusique: 0.6,
   modeMaquette: false,
+  afficherZonesSecurite: false,
 };

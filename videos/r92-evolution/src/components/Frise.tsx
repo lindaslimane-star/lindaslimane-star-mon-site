@@ -4,7 +4,7 @@ import { COULEURS, LAYOUT, POLICE } from "../theme";
 import { indexActif, type Timeline } from "../timing";
 
 const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
-const LARGEUR = 880;
+const LARGEUR = 720;
 
 /** Frise horizontale AVANT → 1 → … → 6, synchronisée avec les images. */
 export const Frise: React.FC<{ tl: Timeline }> = ({ tl }) => {
@@ -36,7 +36,7 @@ export const Frise: React.FC<{ tl: Timeline }> = ({ tl }) => {
       style={{
         position: "absolute",
         top: LAYOUT.friseTop,
-        left: (1080 - LARGEUR) / 2,
+        left: LAYOUT.zoneX + (LAYOUT.zoneW - LARGEUR) / 2,
         width: LARGEUR,
         height: 120,
         opacity: apparition,

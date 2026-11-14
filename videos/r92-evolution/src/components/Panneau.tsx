@@ -153,8 +153,8 @@ const EtiquettePeriode: React.FC<{ s: Segment; tl: Timeline }> = ({ s, tl }) => 
       style={{
         position: "absolute",
         top: LAYOUT.etiquetteTop,
-        left: 0,
-        right: 0,
+left: LAYOUT.zoneX,
+        width: LAYOUT.zoneW,
         display: "flex",
         justifyContent: "center",
         opacity: Math.min(entree, 1) * (1 - sortie),
@@ -204,8 +204,8 @@ const TexteBas: React.FC<{ s: Segment }> = ({ s }) => {
     <div
       style={{
         position: "absolute",
-        left: 0,
-        right: 0,
+left: LAYOUT.zoneX,
+        width: LAYOUT.zoneW,
         bottom: LAYOUT.texteBasBottom,
         display: "flex",
         flexDirection: "column",
@@ -228,7 +228,7 @@ const TexteBas: React.FC<{ s: Segment }> = ({ s }) => {
               boxShadow: principale ? "0 16px 44px rgba(1,8,24,0.5)" : "0 0 26px rgba(59,139,255,0.45)",
               color: principale ? COULEURS.marine : "#FFFFFF",
               fontFamily: "'Montserrat', sans-serif",
-              fontSize: principale ? 64 : 46,
+              fontSize: principale ? 56 : 40,
               fontWeight: 900,
               letterSpacing: principale ? 1.5 : 3,
               whiteSpace: "nowrap",

@@ -15,20 +15,30 @@ export const H = 1920;
 export const FPS = 30;
 
 /** Mise en page (pixels, sur 1080 × 1920) — vidéos en plein écran, textes en surimpression. */
+/**
+ * Zones de sécurité Instagram Reels / Meta Ads (marges de conception conservatrices) :
+ * 250 px en haut, 420 px en bas, 90 px à gauche, 150 px à droite.
+ * Titres, labels, frise et textes restent dans x = 90 → 930, y = 250 → 1500.
+ * Les vidéos, elles, occupent tout l'écran.
+ */
+export const SECURITE = { haut: 250, bas: 420, gauche: 90, droite: 150 };
+
 export const LAYOUT = {
-  titreTop: 92,
-  sousTitreTop: 204,
+  zoneX: SECURITE.gauche,
+  zoneW: 1080 - SECURITE.gauche - SECURITE.droite, // 840
+  titreTop: 266,
+  sousTitreTop: 360,
   panneauX: 0,
   panneauW: 1080,
   panneauTopAvecSousTitre: 0,
   panneauTopSansSousTitre: 0,
   panneauBas: 1920,
   /** Encadré de période, sous le titre et le sous-titre */
-  etiquetteTop: 312,
+  etiquetteTop: 458,
   /** Bas des grands textes (au-dessus de la frise) */
-  texteBasBottom: 330,
-  friseTop: 1704,
-  mentionTop: 1840,
+  texteBasBottom: 600,
+  friseTop: 1338,
+  mentionTop: 1462,
 };
 
 export const glow = (alpha: number, blur = 40) =>

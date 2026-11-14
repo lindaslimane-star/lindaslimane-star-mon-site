@@ -72,10 +72,10 @@ export const Comparaison: React.FC<{
       </div>
       <Degrades />
       {/* libellés au-dessus de chaque moitié */}
-      <div style={{ position: "absolute", top: LAYOUT.etiquetteTop, left: 0, right: 0, display: "flex" }}>
+      <div style={{ position: "absolute", top: LAYOUT.etiquetteTop, left: LAYOUT.zoneX, width: LAYOUT.zoneW, display: "flex" }}>
         {[{ p: avant, prog: gauche }, { p: apres, prog: droite }].map(({ p, prog }, i) => (
           <div key={i} style={{ flex: 1, display: "flex", justifyContent: "center", opacity: prog }}>
-            <Etiquette texte={p.intitule} taille={44} />
+            <Etiquette texte={p.intitule} taille={40} />
           </div>
         ))}
       </div>
@@ -109,8 +109,8 @@ export const Comparaison: React.FC<{
       <div
         style={{
           position: "absolute",
-          left: 0,
-          right: 0,
+          left: LAYOUT.zoneX,
+          width: LAYOUT.zoneW,
           bottom: LAYOUT.texteBasBottom,
           height: 150,
           display: "flex",
@@ -123,7 +123,7 @@ export const Comparaison: React.FC<{
           transform: `translateY(${(1 - texte) * 24}px)`,
         }}
       >
-        <div style={{ fontSize: 50, fontWeight: 900, color: COULEURS.blanc, letterSpacing: 3, textAlign: "center", textShadow: "0 4px 24px rgba(0,0,0,0.7)" }}>
+        <div style={{ fontSize: 40, fontWeight: 900, color: COULEURS.blanc, letterSpacing: 3, textAlign: "center", textShadow: "0 4px 24px rgba(0,0,0,0.7)" }}>
           {slogan}
         </div>
         <div

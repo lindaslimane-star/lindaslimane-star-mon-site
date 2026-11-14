@@ -1,6 +1,9 @@
 import React from "react";
 
-/** Dégradés sombres discrets en haut et en bas : lisibilité du titre et de la frise. */
+/**
+ * Dégradés sombres discrets derrière les textes (haut : titre/labels ; bas : texte, frise, mention).
+ * Ils ne recouvrent que la partie utile pour garder un maximum de vidéo visible.
+ */
 export const Degrades: React.FC = () => (
   <>
     <div
@@ -9,9 +12,9 @@ export const Degrades: React.FC = () => (
         left: 0,
         right: 0,
         top: 0,
-        height: 440,
+        height: 600,
         background:
-          "linear-gradient(180deg, rgba(3,14,38,0.82) 0%, rgba(3,14,38,0.45) 55%, rgba(3,14,38,0) 100%)",
+          "linear-gradient(180deg, rgba(3,14,38,0.55) 0%, rgba(3,14,38,0.6) 40%, rgba(3,14,38,0) 100%)",
       }}
     />
     <div
@@ -20,9 +23,9 @@ export const Degrades: React.FC = () => (
         left: 0,
         right: 0,
         bottom: 0,
-        height: 400,
+        height: 720,
         background:
-          "linear-gradient(0deg, rgba(3,14,38,0.88) 0%, rgba(3,14,38,0.5) 50%, rgba(3,14,38,0) 100%)",
+          "linear-gradient(0deg, rgba(3,14,38,0.55) 0%, rgba(3,14,38,0.7) 55%, rgba(3,14,38,0) 100%)",
       }}
     />
   </>

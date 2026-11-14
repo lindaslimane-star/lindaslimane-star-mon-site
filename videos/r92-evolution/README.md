@@ -51,6 +51,16 @@ npm run render:maquette    # avec emplacements vides, pour valider la mise en pa
 Si Remotion ne peut pas télécharger son navigateur, indiquez un Chrome local :
 `CHROME_PATH=/chemin/vers/chrome npm run render`.
 
+## Zones de sécurité Instagram Reels / Meta Ads
+Marges de conception conservatrices (pas des dimensions officielles universelles) :
+250 px en haut, 420 px en bas, 90 px à gauche, 150 px à droite.
+Titre, sous-titre, encadrés des mois, texte gummies, frise, mention et écran final restent
+dans la zone x = 90 → 930, y = 250 → 1500. Les vidéos occupent tout l'écran (1080 × 1920, sans bandes noires).
+Pour vérifier : `afficherZonesSecurite: true` dans `src/config.ts` (ou le panneau Props) affiche les zones en rouge
+dans la prévisualisation. Laisser `false` pour l'export. Les valeurs se règlent dans `SECURITE` (`src/theme.ts`).
+
+Export : H.264 High, 1080 × 1920, 9:16, 30 i/s, yuv420p BT.709 (couleurs standard), CRF 16.
+
 ## Structure
 - `src/config.ts` — **la configuration à modifier**
 - `src/schema.ts` — description des champs (formulaire du Studio)

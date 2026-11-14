@@ -57,6 +57,8 @@ export const evolutionSchema = z.object({
    * false = seules les périodes réellement documentées sont montrées (export final).
    */
   modeMaquette: z.boolean(),
+  /** Affiche les zones de sécurité Instagram (rouge) pour vérifier la mise en page. Laisser false pour l'export. */
+  afficherZonesSecurite: z.boolean(),
   /** Rempli automatiquement : fichiers introuvables dans public/. Ne pas modifier. */
   fichiersManquants: z.array(z.string()).optional(),
   /** Rempli automatiquement : durée (s) de chaque fichier vidéo. Ne pas modifier. */

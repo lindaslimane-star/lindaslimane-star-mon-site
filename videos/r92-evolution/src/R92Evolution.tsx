@@ -8,6 +8,7 @@ import { Titre } from "./components/Titre";
 import { SousTitre } from "./components/SousTitre";
 import { Panneau } from "./components/Panneau";
 import { Frise } from "./components/Frise";
+import { ZonesSecurite } from "./components/ZonesSecurite";
 
 export const R92Evolution: React.FC<EvolutionProps> = (props) => {
   const { fps, durationInFrames } = useVideoConfig();
@@ -31,10 +32,10 @@ export const R92Evolution: React.FC<EvolutionProps> = (props) => {
           style={{
             position: "absolute",
             top: LAYOUT.mentionTop,
-            left: 90,
-            right: 90,
+            left: LAYOUT.zoneX,
+            width: LAYOUT.zoneW,
             textAlign: "center",
-            fontSize: 22,
+            fontSize: 20,
             fontWeight: 500,
             lineHeight: 1.4,
             color: "rgba(255,255,255,0.5)",
@@ -44,6 +45,7 @@ export const R92Evolution: React.FC<EvolutionProps> = (props) => {
           {props.mention}
         </div>
       ) : null}
+      {props.afficherZonesSecurite ? <ZonesSecurite /> : null}
       {props.musique ? (
         <Audio
           src={/^https?:\/\//.test(props.musique) ? props.musique : staticFile(props.musique)}
